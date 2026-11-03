@@ -60,7 +60,7 @@
 <div class="field"><label>Family intervention plan</label><select name="car_plan"><option value="">Select</option><option>For assessment</option><option>Plan being prepared</option><option>Plan active</option><option>Monitoring / review</option><option>Referred to partner agency</option><option>Closure review</option></select></div>
 <div class="field"><label>Education / health support need</label><select name="car_need"><option value="">Select</option><option>Education / school support</option><option>Health / psychosocial support</option><option>Family support / parenting</option><option>Economic / basic-needs assistance</option><option>Protection / safety support</option><option>Multiple needs</option><option>Not yet assessed</option></select></div>
 <div class="field full"><label>Risk reduction / family intervention update</label><textarea name="car_update" placeholder="Brief assessment and follow-up plan"></textarea></div></div>
-<div class="section-title">D. Case Management & Intervention</div><div class="field full"><div class="notice" style="margin:0">Use minimum necessary information. Keep detailed assessments, medical/legal documents, and sensitive narratives in approved restricted files. These fields are a working draft and must be checked against current DSWD Field Office V forms and office policy before official use.</div></div><div class="field"><label>Last action date</label><input type="date" name="lastAction"></div><div class="field"><label>Next follow-up / hearing</label><input type="date" name="nextFollowup"></div><div class="field"><label>Referral / court status</label><select name="legalStatus"><option>Not applicable / not recorded</option><option>For assessment</option><option>Referred to agency</option><option>Filed with City Prosecutor</option><option>Filed in court</option><option>Ongoing litigation</option><option>Decision / disposition</option><option>Perpetrator at large</option><option>Referred to child-caring institution</option></select></div><div class="field full"><label>Intervention / action summary (avoid unnecessary sensitive details)</label><textarea name="intervention" placeholder="Brief action taken, service/referral provided, and next steps"></textarea></div><div class="field full"><label>Notes / documents checklist</label><textarea name="notes" placeholder="Document checklist, referral reference, or restricted-file location (do not paste sensitive narratives here)"></textarea></div></div><div class="actions"><button class="btn" type="button" id="cancelEditBtn" onclick="cancelEdit()" hidden>Cancel Edit</button><button class="btn" type="reset">Clear Form</button><button class="btn primary" type="submit" id="saveCaseBtn">Save Case Record</button></div></div></form></section>
+<div class="section-title">D. Case Management & Intervention</div><div class="field full"><div class="notice" style="margin:0">Use minimum necessary information. Keep detailed assessments, medical/legal documents, and sensitive narratives in approved restricted files. These fields are a working draft and must be checked against current DSWD Field Office V forms and office policy before official use.</div></div><div class="field"><label>Last action date</label><input type="date" name="lastAction"></div><div class="field"><label>Next follow-up / hearing</label><input type="date" name="nextFollowup"></div><div class="field"><label>Referral / court status</label><select name="legalStatus"><option>Not applicable / not recorded</option><option>For assessment</option><option>Referred to agency</option><option>Filed with City Prosecutor</option><option>Filed in court</option><option>Ongoing litigation</option><option>Decision / disposition</option><option>Perpetrator at large</option><option>Referred to child-caring institution</option></select></div><div class="field full"><label>Intervention / action summary (avoid unnecessary sensitive details)</label><textarea name="intervention" placeholder="Brief action taken, service/referral provided, and next steps"></textarea></div><div class="field full"><label>Notes / documents checklist</label><textarea name="notes" placeholder="Document checklist, referral reference, or restricted-file location (do not paste sensitive narratives here)"></textarea></div></div><div class="card" id="customCaseFieldsCard" style="margin:14px 0;display:none"><h3>Additional Program Information</h3><p class="muted">Additional questions configured by the CSWDO Administrator.</p><div class="formgrid" id="customCaseFields"></div></div><div class="actions"><button class="btn" type="button" id="cancelEditBtn" onclick="cancelEdit()" hidden>Cancel Edit</button><button class="btn" type="reset">Clear Form</button><button class="btn primary" type="submit" id="saveCaseBtn">Save Case Record</button></div></div></form></section>
 <section class="page" id="page-schedule"><div class="pagehead"><div><h2>Follow-ups & Hearings</h2><p>Upcoming appointments and cases requiring action.</p></div><button class="btn primary" onclick="showPage('encode')">＋ Add Case / Follow-up</button></div><div class="card"><div class="tablewrap"><table><thead><tr><th>Case ID</th><th>Program</th><th>Case type</th><th>Next follow-up</th><th>Assigned worker</th><th>Status</th></tr></thead><tbody id="scheduleRows"></tbody></table></div></div></section>
 <section class="page" id="page-reports">
 <div class="pagehead"><div><h2>Quarterly Reports</h2><p>Management summaries calculated only from individual case records encoded in this browser.</p></div><button class="btn primary" onclick="exportCSV()">Export case register CSV</button></div>
@@ -112,10 +112,10 @@ function updateCaseTypeOptions(preserveValue=''){
  other.style.display=sel.value==='Other (please specify)'?'block':'none';
  other.required=sel.value==='Other (please specify)';
 }
-$('programInput').addEventListener('change',()=>toggleProgramFields());
+$('programInput').addEventListener('change',()=>{toggleProgramFields();renderCustomCaseFields();});
 toggleProgramFields();
 $('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
-$('programInput').addEventListener('change',()=>updateCaseTypeOptions());
+$('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();});
 updateCaseTypeOptions();
 
 function showPage(name){if(['user-roles','staff-accounts','activity-logs'].includes(name) && cswdoProfile?.role!=='admin'){alert('Administrator access only.');return;}document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$('page-'+name).classList.add('active');document.querySelectorAll('.nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));const titles={dashboard:'Case Management Dashboard',cases:'Case Records',encode:'Case Intake & Encoding',schedule:'Follow-ups & Hearings',reports:'Quarterly Reports',references:'DSWD Program References','user-roles':'User Roles & Permissions','staff-accounts':'Staff Accounts','activity-logs':'User Activity Logs'};$('topTitle').textContent=titles[name]||name;$('crumb').textContent=titles[name]||name;if(name==='dashboard')renderDashboard();if(name==='cases')renderCases();if(name==='schedule')renderSchedule();if(name==='reports')renderReports();if(name==='staff-accounts')renderStaffAccounts();if(name==='activity-logs')renderActivityLogs();}
@@ -126,7 +126,7 @@ function resetCaseFilters(){['caseSearch'].forEach(id=>$(id).value='');['casePro
 function renderCases(){fillCaseFilterOptions();let q=($('caseSearch').value||'').toLowerCase().trim(),p=$('caseProgram').value,s=$('caseStatus').value,b=$('caseBarangay').value,w=$('caseWorker').value;let arr=cases.filter(c=>(p==='ALL'||c.program===p)&&(s==='ALL'||c.status===s)&&(b==='ALL'||c.barangay===b)&&(w==='ALL'||String(c.worker||'').trim()===w)&&[c.id,c.folderNo,c.caseType,c.barangay,c.sex,c.clientCode,c.worker].some(v=>String(v||'').toLowerCase().includes(q)));$('caseCount').textContent=`Showing ${arr.length} of ${cases.length} records` ;const todayLocal=new Date();todayLocal.setHours(0,0,0,0);const overdue=cases.filter(c=>c.nextFollowup&&new Date(c.nextFollowup+'T00:00:00')<todayLocal&&!['Closed','Resolved'].includes(c.status));$('followupAlert').textContent=overdue.length?`• ${overdue.length} overdue follow-up${overdue.length===1?'':'s'} across all records`: '• No overdue follow-ups across saved records';$('caseRows').innerHTML=arr.length?arr.map(c=>`<tr><td>${esc(c.folderNo||'—')}</td><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.barangay||'—')}</td><td>${esc(c.sex||'—')}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td><td><button class="btn" onclick="viewCase('${esc(c.id)}')">View</button> <button class="btn primary" onclick="editCase('${esc(c.id)}')">Edit</button> <button class="btn" onclick="deleteCase('${esc(c.id)}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="10" class="empty">No matching case records.</td></tr>`}
 function viewCase(id){let c=cases.find(x=>x.id===id);if(!c)return;let msg=`Case ID: ${c.id}\nCASE FOLDER NO.: ${c.folderNo||'—'}\nProgram: ${c.program}\nCase type: ${c.caseType}\nClient code: ${c.clientCode}\nDate received: ${c.dateReceived}\nDate opened: ${c.dateOpened||'—'}\nLast assessment: ${c.lastAssessment||'—'}\nStatus: ${c.status}\nClassification: ${c.classification}\nBarangay: ${c.barangay||'—'}\nSex: ${c.sex||'—'}\nAssigned worker: ${c.worker||'—'}\nNext follow-up: ${c.nextFollowup||'—'}\nLegal status: ${c.legalStatus}\nIntervention: ${c.intervention||'—'}\nNotes: ${c.notes||'—'}`;alert(msg)}function deleteCase(id){if(confirm('Delete this demo case record? This cannot be undone.')){cases=cases.filter(c=>c.id!==id);save();renderCases();renderDashboard();renderReports()}}
 let editingCaseId=null;
-function editCase(id){const c=cases.find(x=>x.id===id);if(!c)return;editingCaseId=id;showPage('encode');const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();updateCaseTypeOptions(c.caseType||'');for(const [key,value] of Object.entries(c)){if(key==='caseType')continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});}
+function editCase(id){const c=cases.find(x=>x.id===id);if(!c)return;editingCaseId=id;showPage('encode');const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();renderCustomCaseFields(c);updateCaseTypeOptions(c.caseType||'');for(const [key,value] of Object.entries(c)){if(key==='caseType')continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});}
 function cancelEdit(){editingCaseId=null;$('caseForm').reset();$('dateReceived').value=today;toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}
 $('caseForm').addEventListener('reset',()=>setTimeout(()=>{if(editingCaseId){editingCaseId=null;$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}$('dateReceived').value=today;toggleProgramFields()},0));
 $('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target).entries());if(d.caseType==='Other (please specify)'){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType){alert('Please specify the other case type / concern.');return;}}delete d.caseTypeOther;const folder=(d.folderNo||'').trim().toLowerCase();if(cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===folder&&c.id!==editingCaseId)){alert('A record with this Case Folder No. already exists. Please check the number before saving.');return;}let c;if(editingCaseId){const old=cases.find(x=>x.id===editingCaseId);if(!old)return;c={...old,...d,year:Number((d.dateReceived||today).slice(0,4)),updatedAt:new Date().toISOString()};cases=cases.map(x=>x.id===editingCaseId?c:x);}else{let y=(d.dateReceived||today).slice(0,4),n=String(cases.filter(x=>x.program===d.program&&x.year===Number(y)).length+1).padStart(4,'0');c={...d,year:Number(y),id:`${d.program}-${y}-${n}`,createdAt:new Date().toISOString()};cases.push(c);}save();const savedId=c.id;editingCaseId=null;e.target.reset();$('dateReceived').value=today;updateCaseTypeOptions();toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;const wasUpdated=Boolean(c.updatedAt);$('successTitle').textContent=wasUpdated?'Case record updated successfully':'Case encoded successfully';$('successMessage').textContent=`Case ID: ${savedId}. Opening Case Records…`;$('successToast').hidden=false;setTimeout(()=>{showPage('cases');$('caseProgram').value='ALL';renderCases();$('successToast').hidden=true;},1100)});function renderSchedule(){let arr=cases.filter(c=>c.nextFollowup).sort((a,b)=>a.nextFollowup.localeCompare(b.nextFollowup));$('scheduleRows').innerHTML=arr.length?arr.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.nextFollowup)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No follow-ups scheduled. Add a next follow-up date when encoding a case.</td></tr>`}
@@ -213,6 +213,64 @@ function cswdoToApp(row) {
     priority: details.priority || 'Routine'
   };
 }
+let cswdoCustomFields = [];
+async function loadCustomFormFields(){
+  const {data,error}=await cswdoClient.from('case_form_fields').select('*').eq('is_active',true).order('sort_order').order('created_at');
+  if(error){console.warn('Custom form fields unavailable:',error.message);cswdoCustomFields=[];}
+  else cswdoCustomFields=data||[];
+  renderCustomCaseFields();
+}
+function renderCustomCaseFields(saved={}){
+  const program=document.getElementById('programInput')?.value;
+  const wrap=document.getElementById('customCaseFields'); const card=document.getElementById('customCaseFieldsCard');
+  if(!wrap||!card)return;
+  const fields=cswdoCustomFields.filter(f=>f.program===program);
+  card.style.display=fields.length?'block':'none';
+  wrap.innerHTML=fields.map(f=>{
+    const name='custom_'+f.id, val=saved[name]??''; let control='';
+    if(f.field_type==='textarea') control=`<textarea name="${name}" ${f.is_required?'required':''}>${esc(val)}</textarea>`;
+    else if(f.field_type==='select') control=`<select name="${name}" ${f.is_required?'required':''}><option value="">Select…</option>${(f.options||[]).map(o=>`<option ${String(val)===String(o)?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
+    else if(f.field_type==='date'||f.field_type==='number') control=`<input type="${f.field_type}" name="${name}" value="${esc(val)}" ${f.is_required?'required':''}>`;
+    else control=`<input type="text" name="${name}" value="${esc(val)}" ${f.is_required?'required':''}>`;
+    return `<div class="field"><label>${esc(f.label)}${f.is_required?' *':''}</label>${control}${f.help_text?`<small class="muted">${esc(f.help_text)}</small>`:''}</div>`;
+  }).join('');
+}
+function openFormManagement(){
+ if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');
+ showPage('form-management'); loadFormManagement();
+}
+async function loadFormManagement(){
+ const body=document.getElementById('formFieldRows'); if(!body)return;
+ body.innerHTML='<tr><td colspan="6">Loading…</td></tr>';
+ const {data,error}=await cswdoClient.from('case_form_fields').select('*').order('program').order('sort_order');
+ if(error){body.innerHTML=`<tr><td colspan="6">${esc(error.message)}. Run the supplied SQL migration first.</td></tr>`;return;}
+ body.innerHTML=(data||[]).map(f=>`<tr><td>${esc(f.program)}</td><td>${esc(f.label)}</td><td>${esc(f.field_type)}</td><td>${f.is_required?'Required':'Optional'}</td><td>${f.is_active?'Active':'Inactive'}</td><td><button class="btn" onclick="editFormField('${f.id}')">Edit</button> <button class="btn danger" onclick="removeFormField('${f.id}')">Remove</button></td></tr>`).join('')||'<tr><td colspan="6">No additional questions yet.</td></tr>';
+}
+function openFormFieldEditor(row=null){
+ document.getElementById('formFieldId').value=row?.id||'';
+ document.getElementById('formFieldProgram').value=row?.program||'CNSP';
+ document.getElementById('formFieldLabel').value=row?.label||'';
+ document.getElementById('formFieldType').value=row?.field_type||'text';
+ document.getElementById('formFieldOptions').value=(row?.options||[]).join('\n');
+ document.getElementById('formFieldHelp').value=row?.help_text||'';
+ document.getElementById('formFieldRequired').checked=!!row?.is_required;
+ document.getElementById('formFieldActive').checked=row?!!row.is_active:true;
+ document.getElementById('formFieldEditor').style.display='block';
+}
+async function editFormField(id){const {data,error}=await cswdoClient.from('case_form_fields').select('*').eq('id',id).single();if(error)return alert(error.message);openFormFieldEditor(data);}
+async function removeFormField(id){if(!confirm('Deactivate this question? Historical case answers will be preserved.'))return;const {error}=await cswdoClient.from('case_form_fields').update({is_active:false}).eq('id',id);if(error)return alert(error.message);await loadFormManagement();await loadCustomFormFields();}
+document.getElementById('formFieldForm')?.addEventListener('submit',async e=>{
+ e.preventDefault(); if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');
+ const id=document.getElementById('formFieldId').value;
+ const type=document.getElementById('formFieldType').value;
+ const options=document.getElementById('formFieldOptions').value.split('\n').map(x=>x.trim()).filter(Boolean);
+ if(type==='select'&&options.length<1)return alert('Add at least one dropdown option, one per line.');
+ const payload={program:document.getElementById('formFieldProgram').value,label:document.getElementById('formFieldLabel').value.trim(),field_type:type,options:type==='select'?options:[],help_text:document.getElementById('formFieldHelp').value.trim()||null,is_required:document.getElementById('formFieldRequired').checked,is_active:document.getElementById('formFieldActive').checked,updated_at:new Date().toISOString()};
+ const q=id?cswdoClient.from('case_form_fields').update(payload).eq('id',id):cswdoClient.from('case_form_fields').insert({...payload,created_by:cswdoUser.id});
+ const {error}=await q;if(error)return alert('Unable to save question: '+error.message);
+ document.getElementById('formFieldEditor').style.display='none';await loadFormManagement();await loadCustomFormFields();alert('Form question saved. It will appear on new case entries.');
+});
+
 function cswdoDetailsFromForm(d) {
   const main = new Set([
     'program','folderNo','caseType','dateReceived','dateOpened','classification','status',
@@ -293,6 +351,7 @@ async function cswdoStartSession(session) {
   if (CSWDO_PORTAL === 'staff' && profile.role === 'admin') { window.location.replace('admin.html'); return; }
   if (CSWDO_PORTAL === 'staff' && !['social_worker','cswd_officer'].includes(profile.role)) { await cswdoClient.auth.signOut(); throw new Error('This account is not authorized for the Staff Portal.'); }
   await cswdoLoadProfiles();
+  await loadCustomFormFields();
   cswdoSetRoleUI();
   await cswdoLoadCases();
   document.getElementById('authGate').style.display = 'none';
@@ -386,6 +445,7 @@ async function cswdoSaveCase(event){
   if(cswdoProfile.role==='admin' && d.worker && d.worker!=='Unassigned' && !assignedProfile)
     return alert('Select an active social worker account from the authorized staff list. Do not type an unverified name.');
   const details=cswdoDetailsFromForm(d);
+  Object.entries(d).forEach(([k,v])=>{if(k.startsWith("custom_")&&v!=="")details[k]=v;});
   const payload={
     folder_no:d.folderNo.trim(), program:d.program, case_type:d.caseType,
     date_received:d.dateReceived, date_opened:d.dateOpened||null,
@@ -427,7 +487,7 @@ async function cswdoSaveCase(event){
       }
     }
     const wasEdit=Boolean(editingCaseId);
-    editingCaseId=null;form.reset();$('dateReceived').value=today;toggleProgramFields();updateCaseTypeOptions();
+    editingCaseId=null;form.reset();$('dateReceived').value=today;toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();
     $('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;
     await cswdoLoadCases();
     $('successTitle').textContent=wasEdit?'Case record updated successfully':'Case encoded successfully';
