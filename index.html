@@ -113,7 +113,8 @@ function updateCaseTypeOptions(preserveValue=''){
  other.required=sel.value==='Other (please specify)';
 }
 $('programInput').addEventListener('change',()=>{toggleProgramFields();renderCustomCaseFields();});
-toggleProgramFields();
+// Do not call toggleProgramFields() here: the authenticated profile and program assignments
+// are declared/loaded in the Supabase script below. cswdoSetRoleUI() applies visibility after login.
 $('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
 $('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();});
 updateCaseTypeOptions();
