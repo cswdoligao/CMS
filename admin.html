@@ -172,6 +172,9 @@ const CSWDO_SUPABASE_URL = 'https://zjbneacjyfhrczgbhwzt.supabase.co';
 const CSWDO_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_QywjU6McljGl7_hPWHz-6Q_I9Qa_3eQ';
 const cswdoClient = window.supabase.createClient(CSWDO_SUPABASE_URL, CSWDO_SUPABASE_PUBLISHABLE_KEY);
 let cswdoUser = null, cswdoProfile = null, cswdoProfiles = [];
+let staffAuthStatus = {};
+let staffAuthStatusLoaded = false;
+let staffAuthStatusLoading = false;
 let cswdoLoading = false;
 
 function cswdoMessage(msg, isError=true) {
@@ -536,7 +539,50 @@ function renderSchedule(){
 // ADMINISTRATION MODULES
 function openStaffForm(row=null){$('staffEditor').style.display='block';$('staffEditorTitle').textContent=row?'Edit Staff Profile':'Add Staff Profile';$('staffId').value=row?.id||'';$('staffName').value=row?.full_name||'';$('staffUsername').value=row?.username||'';$('staffEmail').value=row?.email||'';$('staffRole').value=row?.role||'social_worker';$('staffProgram').value=row?.primary_program||'';$('staffActive').value=String(row?.is_active??true);$('staffInitialPassword').value='';$('staffInitialPassword').required=!row;$('staffEditor').scrollIntoView({behavior:'smooth'});}
 function closeStaffForm(){$('staffEditor').style.display='none';$('staffForm').reset();}
-function renderStaffAccounts(){if(cswdoProfile?.role!=='admin')return;const q=($('staffSearch')?.value||'').toLowerCase(),r=$('staffRoleFilter')?.value||'ALL';const rows=cswdoProfiles.filter(x=>(r==='ALL'||x.role===r)&&(`${x.full_name||''} ${x.username||''} ${x.email||''}`).toLowerCase().includes(q));$('staffRows').innerHTML=rows.length?rows.map(x=>`<tr><td><b>${esc(x.full_name||'—')}</b></td><td>${esc(x.username||'—')}</td><td>${esc(x.email||'—')}</td><td>${esc(x.role||'—')}</td><td>${esc(x.primary_program||'All / —')}</td><td>${x.is_active?'<span class="pill green">Active</span>':'<span class="pill red">Inactive</span>'}</td><td><button class="btn" onclick="editStaffProfile('${x.id}')">Edit</button> <button class="btn" onclick="resetStaffPassword('${x.id}')">Reset password</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">No staff profiles found. Add or check profiles in Supabase.</td></tr>';}
+async function refreshStaffAuthStatuses(){
+  if(cswdoProfile?.role!=='admin' || staffAuthStatusLoading) return;
+  staffAuthStatusLoading=true;
+  try{
+    const {data,error}=await cswdoClient.functions.invoke('admin-staff-confirm',{body:{action:'status'}});
+    if(error) throw error;
+    if(data?.error) throw new Error(data.error);
+    staffAuthStatus=data?.statuses||{};
+    staffAuthStatusLoaded=true;
+    $('staffAuthStatusNotice')?.remove();
+    renderStaffAccounts();
+  }catch(err){
+    console.error('Unable to load Auth confirmation statuses:',err);
+    $('staffAuthStatusNotice')?.remove();
+    const note=document.createElement('div');note.id='staffAuthStatusNotice';note.className='notice';
+    note.textContent='Unable to retrieve Auth confirmation status. Confirm Account actions are unavailable until the admin-staff-confirm Edge Function is deployed.';
+    $('staffRows')?.closest('.card')?.prepend(note);
+  }finally{staffAuthStatusLoading=false;}
+}
+function renderStaffAccounts(){
+  if(cswdoProfile?.role!=='admin')return;
+  const q=($('staffSearch')?.value||'').toLowerCase(),r=$('staffRoleFilter')?.value||'ALL';
+  const rows=cswdoProfiles.filter(x=>(r==='ALL'||x.role===r)&&(`${x.full_name||''} ${x.username||''} ${x.email||''}`).toLowerCase().includes(q));
+  $('staffRows').innerHTML=rows.length?rows.map(x=>{
+    const confirmed=staffAuthStatus[x.id]?.email_confirmed===true;
+    const authStatus=staffAuthStatusLoaded?(confirmed?'<span class="pill green">Email confirmed</span>':'<span class="pill orange">Confirmation pending</span>'):'<span class="pill">Checking…</span>';
+    const confirmButton=staffAuthStatusLoaded && !confirmed && x.role!=='admin' && x.is_active?` <button class="btn primary" onclick="confirmStaffAccount('${x.id}')">Confirm Account</button>`:'';
+    return `<tr><td><b>${esc(x.full_name||'—')}</b></td><td>${esc(x.username||'—')}</td><td>${esc(x.email||'—')}</td><td>${esc(x.role||'—')}</td><td>${esc(x.primary_program||'All / —')}</td><td>${x.is_active?'<span class="pill green">Active</span>':'<span class="pill red">Inactive</span>'}<br>${authStatus}</td><td><button class="btn" onclick="editStaffProfile('${x.id}')">Edit</button> <button class="btn" onclick="resetStaffPassword('${x.id}')">Reset password</button>${confirmButton}</td></tr>`;
+  }).join(''):'<tr><td colspan="7" class="empty">No staff profiles found. Add or check profiles in Supabase.</td></tr>';
+  if(!staffAuthStatusLoaded && !staffAuthStatusLoading) refreshStaffAuthStatuses();
+}
+async function confirmStaffAccount(id){
+  if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');
+  const staff=cswdoProfiles.find(x=>x.id===id);if(!staff)return alert('Staff account not found.');
+  if(staff.role==='admin')return alert('Administrator accounts are not eligible for this staff confirmation action.');
+  if(!staff.is_active)return alert('Activate this staff profile before confirming its Auth account.');
+  if(!confirm(`Confirm the email address for ${staff.full_name} (${staff.email})? This will not change the password.`))return;
+  try{
+    const {data,error}=await cswdoClient.functions.invoke('admin-staff-confirm',{body:{action:'confirm',id}});
+    if(error)throw error;if(data?.error)throw new Error(data.error);
+    staffAuthStatus[id]={email_confirmed:true};staffAuthStatusLoaded=true;renderStaffAccounts();
+    alert(data?.message||'Staff account confirmed. The existing password and profile details were preserved.');
+  }catch(err){alert('Unable to confirm staff account: '+(err.message||err));}
+}
 function editStaffProfile(id){const row=cswdoProfiles.find(x=>x.id===id);if(row)openStaffForm(row);}
 $('staffForm')?.addEventListener('submit',async e=>{e.preventDefault();if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');const id=$('staffId').value;const payload={full_name:$('staffName').value.trim(),username:$('staffUsername').value.trim().toLowerCase(),email:$('staffEmail').value.trim().toLowerCase(),role:$('staffRole').value,primary_program:$('staffProgram').value||null,is_active:$('staffActive').value==='true',updated_at:new Date().toISOString()};try{const action=id?'update':'create';const body={action,...payload,id,password:$('staffInitialPassword').value};const {data,error}=await cswdoClient.functions.invoke('admin-staff-account',{body});if(error)throw error;if(data?.error)throw new Error(data.error);await cswdoLoadProfiles();renderStaffAccounts();closeStaffForm();alert(data?.message||'Staff account saved.');}catch(err){alert('Unable to save staff profile: '+(err.message||err));}});
 async function resetStaffPassword(id){if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');const pw=prompt('Enter a new temporary password (minimum 12 characters). The staff member must change it after signing in:');if(!pw)return;if(pw.length<12)return alert('Use at least 12 characters.');if(!confirm('Reset this staff member’s password now?'))return;try{const {data,error}=await cswdoClient.functions.invoke('admin-staff-account',{body:{action:'reset_password',id,password:pw}});if(error)throw error;if(data?.error)throw new Error(data.error);alert(data?.message||'Password reset successfully.');}catch(err){alert('Password reset failed: '+(err.message||err));}}
