@@ -10,8 +10,8 @@
     <h2 style="margin:0 0 5px;color:#102746">CSWDO Case Management</h2>
     <p style="margin:0 0 20px;color:#68788d;font-size:13px">Ligao City, Albay · Staff login</p>
     <form id="supabaseLoginForm">
-      <label style="display:block;font-size:12px;font-weight:700;margin:0 0 6px">Email address</label>
-      <input id="loginEmail" type="email" required autocomplete="username" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:13px">
+      <label style="display:block;font-size:12px;font-weight:700;margin:0 0 6px">Username</label>
+      <input id="loginUsername" type="text" required minlength="3" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Enter your username" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:13px">
       <label style="display:block;font-size:12px;font-weight:700;margin:0 0 6px">Password</label>
       <input id="loginPassword" type="password" required autocomplete="current-password" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:15px">
       <button id="loginButton" type="submit" style="width:100%;padding:12px;border:0;border-radius:8px;background:#1769aa;color:white;font-weight:700;cursor:pointer">Sign in securely</button>
@@ -381,12 +381,20 @@ async function cswdoLogin(event) {
   const button = document.getElementById('loginButton');
   button.disabled = true; button.textContent = 'Signing in…'; cswdoMessage('');
   try {
-    const {data,error} = await cswdoClient.auth.signInWithPassword({
-      email: document.getElementById('loginEmail').value.trim(),
-      password: document.getElementById('loginPassword').value
+    const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    const {data,error} = await cswdoClient.functions.invoke('username-login', {
+      body: { username, password }
     });
-    if (error) throw error;
-    await cswdoStartSession(data.session);
+    if (error) throw new Error('Unable to sign in. Check your username and password, then try again.');
+    if (data?.error) throw new Error(data.error);
+    if (!data?.session?.access_token || !data?.session?.refresh_token) throw new Error('Login service returned an invalid session. Please contact the administrator.');
+    const {data:sessionData,error:sessionError} = await cswdoClient.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token
+    });
+    if (sessionError) throw sessionError;
+    await cswdoStartSession(sessionData.session);
   } catch (e) { cswdoMessage(e.message || 'Unable to sign in.'); }
   finally { button.disabled = false; button.textContent = 'Sign in securely'; }
 }
@@ -394,7 +402,7 @@ document.getElementById('supabaseLoginForm').addEventListener('submit',cswdoLogi
 document.getElementById('logoutButton').addEventListener('click',async()=>{
   await cswdoClient.auth.signOut(); cswdoUser=null; cswdoProfile=null; cases=[];
   document.getElementById('authGate').style.display='grid';
-  document.getElementById('loginPassword').value='';
+  document.getElementById('loginPassword').value=''; document.getElementById('loginUsername').value='';
 });
 async function cswdoInitialize() {
   try {
