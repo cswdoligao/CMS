@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CSWDO Staff Portal | Ligao City</title>
+<style>
+:root{--navy:#102746;--blue:#1769aa;--pale:#f2f6fb;--ink:#1d2a3b;--muted:#68788d;--line:#dce5ef;--green:#2b8a63;--orange:#dc8429;--purple:#8057b7;--red:#c94a58}*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:var(--ink);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}.layout{display:flex;min-height:100vh}.sidebar{width:245px;background:var(--navy);color:#fff;padding:22px 15px;flex-shrink:0}.brand{padding:5px 10px 25px;border-bottom:1px solid #ffffff25}.brand .seal{width:42px;height:42px;border-radius:12px;background:#fff;color:var(--navy);display:inline-grid;place-items:center;font-weight:900;margin-bottom:12px}.brand h2{font-size:17px;line-height:1.2;margin:0}.brand small{color:#b7cbe3}.navlabel{font-size:10px;letter-spacing:1.4px;color:#91a9c5;margin:23px 10px 8px}.nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#dce8f6;text-align:left;padding:12px;border-radius:9px;cursor:pointer;font-size:13px;margin:3px 0}.nav button.active,.nav button:hover{background:#ffffff18;color:#fff}.nav .ico{width:21px;text-align:center;font-size:16px}.sidebar .foot{font-size:11px;color:#91a9c5;margin:32px 10px}.main{flex:1;min-width:0}.topbar{height:76px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;gap:16px}.crumb{font-size:12px;color:var(--muted)}.topbar h1{font-size:20px;margin:2px 0 0;color:var(--navy)}.user{display:flex;align-items:center;gap:10px;font-size:12px}.avatar{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;background:#e0ebf8;color:var(--navy);font-weight:800}.content{padding:25px 30px;max-width:1600px;margin:auto}.page{display:none}.page.active{display:block}.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px}.pagehead h2{font-size:22px;margin:0 0 5px;color:var(--navy)}.pagehead p{margin:0;color:var(--muted)}.btn{border:1px solid var(--line);background:#fff;color:var(--navy);padding:10px 14px;border-radius:8px;font-weight:650;cursor:pointer}.btn.primary{background:var(--blue);border-color:var(--blue);color:white}.btn.dark{background:var(--navy);border-color:var(--navy);color:#fff}.filters{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 20px}.input,select,textarea{width:100%;padding:10px 11px;border:1px solid #d2deeb;border-radius:8px;background:#fff;color:var(--ink);font:inherit}.filters select{width:auto;min-width:130px}.grid{display:grid;gap:15px}.stats{grid-template-columns:repeat(5,minmax(130px,1fr));margin-bottom:18px}.card{background:white;border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:0 3px 12px #18395a05}.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}.stat-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#e8f1fb;color:var(--blue);font-size:17px}.stat-num{font-size:30px;font-weight:800;letter-spacing:-1px;margin:12px 0 3px;color:var(--navy)}.stat-foot{font-size:11px;color:var(--muted)}.two{grid-template-columns:1.35fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.card h3{margin:0 0 5px;font-size:15px;color:var(--navy)}.sub{font-size:12px;color:var(--muted);margin-bottom:15px}.bars{display:flex;flex-direction:column;gap:16px;margin-top:17px}.barrow{display:grid;grid-template-columns:70px 1fr 35px;gap:10px;align-items:center;font-size:12px}.track{height:11px;border-radius:20px;background:#edf2f8;overflow:hidden}.fill{height:100%;border-radius:20px}.pill{font-size:11px;padding:4px 8px;border-radius:20px;display:inline-block;background:#eaf2fb;color:#225b91}.pill.green{background:#e5f5ec;color:#21794e}.pill.orange{background:#fff1df;color:#9b5b0d}.pill.red{background:#ffeaec;color:#a82e3a}.pill.purple{background:#f0eafd;color:#6d46a7}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:10px;background:white}table{border-collapse:collapse;width:100%;min-width:750px}th,td{padding:12px 14px;text-align:left;border-bottom:1px solid #e8eef5;font-size:12px}th{font-size:11px;letter-spacing:.3px;text-transform:uppercase;color:#60748b;background:#f7f9fc}tr:last-child td{border-bottom:0}.empty{text-align:center;padding:35px;color:var(--muted)}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.field label{display:block;font-size:12px;font-weight:700;margin:0 0 6px;color:#40546b}.field.full{grid-column:1/-1}.field textarea{min-height:85px;resize:vertical}.section-title{grid-column:1/-1;font-size:13px;font-weight:800;color:var(--blue);padding-top:9px;border-bottom:1px solid var(--line);padding-bottom:8px}.actions{display:flex;gap:9px;justify-content:flex-end;margin-top:20px}.notice{padding:13px 15px;background:#fff8e9;border:1px solid #f5dfb3;border-radius:9px;color:#76521b;font-size:12px;margin-bottom:18px}.reportgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.reportbox{padding:18px;border:1px solid var(--line);border-radius:11px;background:white}.reportbox h3{margin:0 0 6px}.muted{color:var(--muted)}.caseid{font-weight:800;color:var(--blue)}.program-fields{display:contents}.program-fields[hidden]{display:none!important}.mobilemenu{display:none}.success-toast{position:fixed;top:22px;right:22px;z-index:9999;max-width:min(420px,calc(100vw - 32px));background:#e8f8ef;border:1px solid #9ed9b6;border-left:5px solid #238653;color:#155b36;padding:15px 18px;border-radius:12px;box-shadow:0 12px 35px #10274624;display:flex;gap:12px;align-items:flex-start;animation:toastIn .22s ease-out}.success-toast .check{width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:#238653;color:white;display:grid;place-items:center;font-weight:800}.success-toast strong{display:block;font-size:14px;margin-bottom:3px}.success-toast span{font-size:12px}.success-toast[hidden]{display:none}@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:1fr}.formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.sidebar{width:68px;padding:15px 8px}.brand{padding:5px 4px 18px}.brand h2,.brand small,.navlabel,.nav button span:not(.ico),.sidebar .foot{display:none}.brand .seal{width:45px}.nav button{justify-content:center;padding:12px 5px}.nav .ico{font-size:18px}.topbar{padding:0 15px;height:68px}.topbar h1{font-size:16px}.user .utext{display:none}.content{padding:18px 13px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:14px}.stat-num{font-size:25px}.pagehead{flex-direction:column}.formgrid{grid-template-columns:1fr}.reportgrid,.three{grid-template-columns:1fr}.filters select{flex:1}.field.full,.section-title{grid-column:auto}}
+</style></head><body>
+<div id="authGate" style="position:fixed;inset:0;z-index:10000;background:#eef3f9;display:grid;place-items:center;padding:20px">
+  <div style="width:min(430px,100%);background:#fff;border:1px solid #dce5ef;border-radius:18px;padding:28px;box-shadow:0 20px 60px #10274622">
+    <div style="width:48px;height:48px;border-radius:13px;background:#102746;color:white;display:grid;place-items:center;font-weight:900;margin-bottom:16px">CS</div>
+    <h2 style="margin:0 0 5px;color:#102746">CSWDO Case Management</h2>
+    <p style="margin:0 0 20px;color:#68788d;font-size:13px">Ligao City, Albay · Staff login</p>
+    <form id="supabaseLoginForm">
+      <label style="display:block;font-size:12px;font-weight:700;margin:0 0 6px">Username</label>
+      <input id="loginUsername" type="text" required minlength="3" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Enter your username" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:13px">
+      <label style="display:block;font-size:12px;font-weight:700;margin:0 0 6px">Password</label>
+      <input id="loginPassword" type="password" required autocomplete="current-password" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:15px">
+      <button id="loginButton" type="submit" style="width:100%;padding:12px;border:0;border-radius:8px;background:#1769aa;color:white;font-weight:700;cursor:pointer">Sign in securely</button>
+      <p id="loginError" role="alert" style="color:#b42332;font-size:12px;min-height:18px;margin:12px 0 0"></p>
+    </form>
+    <p style="font-size:11px;color:#68788d;margin:12px 0 0">Use your CSWDO staff account. Administrator accounts must use the Administrator Portal.</p>
+  </div>
+</div>
+<div id="successToast" class="success-toast" role="status" aria-live="polite" hidden><div class="check">✓</div><div><strong id="successTitle">Case encoded successfully</strong><span id="successMessage">Opening Case Records…</span></div></div><div class="layout"><aside class="sidebar"><div class="brand"><div class="seal">CS</div><h2>CSWDO CASE<br>MANAGEMENT</h2><small>City of Ligao, Albay</small></div><div class="navlabel">WORKSPACE</div><nav class="nav"><button class="active" data-page="dashboard"><span class="ico">▦</span><span>Dashboard</span></button><button data-page="cases"><span class="ico">▤</span><span>Case Records</span></button><button data-page="encode"><span class="ico">＋</span><span>Encode a Case</span></button><button data-page="schedule"><span class="ico">◷</span><span>Follow-ups & Hearings</span></button><div class="navlabel">PROGRAMS</div><button data-program="CNSP"><span class="ico">♧</span><span>CNSP</span></button><button data-program="VAWC"><span class="ico">♡</span><span>VAWC</span></button><button data-program="CICL"><span class="ico">⚖</span><span>CICL</span></button><button data-program="CAR"><span class="ico">⌂</span><span>CAR</span></button><div class="navlabel">REPORTING</div><button data-page="reports"><span class="ico">▥</span><span>Quarterly Reports</span></button><button data-page="references"><span class="ico">ⓘ</span><span>DSWD References</span></button><div class="navlabel" id="adminNavLabel" style="display:none">ADMINISTRATION</div><button data-page="staff-accounts" id="staffAccountsNav" style="display:none"><span class="ico">♟</span><span>Staff Accounts</span></button><button data-page="user-roles" id="userRolesNav" style="display:none"><span class="ico">♙</span><span>User Roles</span></button><button data-page="activity-logs" id="activityLogsNav" style="display:none"><span class="ico">▤</span><span>Activity Logs</span></button></nav><div class="foot">Confidential case information<br>Authorized personnel only</div></aside><main class="main"><header class="topbar"><div><div class="crumb">CSWDO / <span id="crumb">Overview</span></div><h1 id="topTitle">Case Management Dashboard</h1></div><div class="user"><div class="avatar">CS</div><div class="utext"><b id="signedInName">Authorized Personnel</b><br><span class="muted" id="signedInRole">Connected account</span></div><button class="btn" id="logoutButton" type="button">Sign out</button></div></header><div class="content">
+<section class="page active" id="page-dashboard"><div class="pagehead"><div><h2>Good day, CSWDO team 👋</h2><p>Case monitoring overview · Calendar Year <span id="dashYear">2026</span></p></div><button class="btn primary" onclick="showPage('encode')">＋ Encode New Case</button></div><div class="filters"><select id="filterYear" onchange="renderDashboard()"><option>2026</option><option>2025</option><option>2024</option></select><select id="filterProgram" onchange="renderDashboard()"><option value="ALL">All programs</option><option>CNSP</option><option>VAWC</option><option>CICL</option><option>CAR</option></select><select id="filterQuarter" onchange="renderDashboard()"><option value="ALL">All quarters</option><option value="1">1st Quarter</option><option value="2">2nd Quarter</option><option value="3">3rd Quarter</option><option value="4">4th Quarter</option></select></div><div class="grid stats"><div class="card"><div class="stat-top">Total Case Records <span class="stat-icon">▤</span></div><div class="stat-num" id="statTotal">0</div><div class="stat-foot">Visible records under your account</div></div><div class="card"><div class="stat-top">CNSP <span class="stat-icon">♧</span></div><div class="stat-num" id="statCNSP">0</div><div class="stat-foot">Children needing special protection</div></div><div class="card"><div class="stat-top">VAWC <span class="stat-icon">♡</span></div><div class="stat-num" id="statVAWC">0</div><div class="stat-foot">Violence against women & children</div></div><div class="card"><div class="stat-top">CICL <span class="stat-icon">⚖</span></div><div class="stat-num" id="statCICL">0</div><div class="stat-foot">Children in conflict with the law</div></div><div class="card"><div class="stat-top">CAR <span class="stat-icon">⌂</span></div><div class="stat-num" id="statCAR">0</div><div class="stat-foot">Children at risk</div></div></div><div class="grid two"><div class="card"><h3>Quarterly case activity</h3><div class="sub">Case records by quarter · selected year and program</div><div id="quarterBars" class="bars"></div></div><div class="card"><h3>Case status overview</h3><div class="sub">Current status of saved case records</div><div id="statusBars" class="bars"></div></div></div><div class="grid two" style="margin-top:15px"><div class="card"><h3>Sex distribution</h3><div class="sub">Based on recorded client sex</div><div id="sexBars" class="bars"></div></div><div class="card"><h3>Cases by program</h3><div class="sub">Comparison across CSWDO programs</div><div id="programBars" class="bars"></div></div></div><div class="grid two" style="margin-top:15px"><div class="card"><h3>Barangay distribution</h3><div class="sub">Top barangays by encoded cases</div><div id="barangayBars" class="bars"></div></div><div class="card"><h3>Case type / concern distribution</h3><div class="sub">Most frequently recorded concerns</div><div id="concernBars" class="bars"></div></div></div><div class="card" style="margin-top:15px"><h3>Recently encoded cases</h3><div class="sub">Latest records available to your account</div><div class="tablewrap"><table><thead><tr><th>Case ID</th><th>Program</th><th>Case Type</th><th>Date Received</th><th>Assigned Worker</th><th>Status</th></tr></thead><tbody id="recentRows"></tbody></table></div></div></section>
+<section class="page" id="page-cases"><div class="pagehead"><div><h2>Case Records</h2><p>Search and manage program case records.</p></div><button class="btn primary" onclick="showPage('encode')">＋ New Case</button></div><div class="filters"><input class="input" style="max-width:320px" id="caseSearch" placeholder="Search case folder no., case ID, client code, concern…" oninput="renderCases()"><select id="caseProgram" onchange="renderCases()"><option value="ALL">All programs</option><option>CNSP</option><option>VAWC</option><option>CICL</option><option>CAR</option></select><select id="caseBarangay" onchange="renderCases()"><option value="ALL">All barangays</option></select><select id="caseWorker" onchange="renderCases()"><option value="ALL">All social workers</option></select><select id="caseStatus" onchange="renderCases()"><option value="ALL">All statuses</option><option>Open</option><option>Under Assessment</option><option>Ongoing</option><option>Ongoing Intervention</option><option>For Follow-up</option><option>Referred</option><option>Resolved</option><option>Closed</option></select><button class="btn" onclick="resetCaseFilters()">Reset filters</button></div><div class="filters" style="align-items:center"><span class="muted" id="caseCount">0 records</span><span class="muted" id="followupAlert"></span></div><div class="tablewrap"><table><thead><tr><th>Case Folder No.</th><th>Case ID</th><th>Program</th><th>Case Type</th><th>Received</th><th>Barangay</th><th>Sex</th><th>Social Worker</th><th>Status</th><th></th></tr></thead><tbody id="caseRows"></tbody></table></div></section>
+<section class="page" id="page-encode"><div class="pagehead"><div><h2>Case Intake & Encoding</h2><p>Record a new case or update case management information.</p></div><span class="pill">Confidential record</span></div><div class="notice">Secure access: Case records are stored in the CSWDO Supabase database. Only encode fictional test records until account permissions, document security, backups, and operational safeguards have been fully tested.</div><form id="caseForm"><div class="card"><div class="formgrid"><div class="section-title">A. Case Identification</div><div class="field"><label>Program *</label><select name="program" id="programInput" required><option value="CNSP">CNSP — Children in Need of Special Protection</option><option value="VAWC">VAWC — Violence Against Women and their Children</option><option value="CICL">CICL — Children in Conflict with the Law</option><option value="CAR">CAR — Children at Risk</option></select></div><div class="field"><label>CASE FOLDER NO. *</label><input name="folderNo" required placeholder="e.g., CNSP-2026-001"></div><div class="field"><label>Case type / concern *</label><select name="caseType" id="caseTypeInput" required><option value="">Select a concern</option></select><input name="caseTypeOther" id="caseTypeOther" class="input" style="margin-top:8px;display:none" placeholder="Specify other concern" aria-label="Specify other concern"></div><div class="field"><label>Date received *</label><input type="date" name="dateReceived" id="dateReceived" required></div><div class="field"><label>Date case opened</label><input type="date" name="dateOpened"></div><div class="field"><label>Case classification</label><select name="classification"><option>New case</option><option>Carry-over / continuing case</option><option>Reopened case</option><option>Referral received</option></select></div><div class="field"><label>Case status *</label><select name="status" required><option>Open</option><option>Ongoing</option><option>For Follow-up</option><option>Referred</option><option>Resolved</option><option>Closed</option></select></div><div class="field"><label>Priority</label><select name="priority"><option>Routine</option><option>Priority</option><option>Urgent</option><option>Emergency</option></select></div><div class="section-title">B. Client & Referral (use internal identifiers in demo)</div><div class="field"><label>Client code / case reference *</label><input name="clientCode" required placeholder="e.g., CNSP-2026-0001"></div><div class="field"><label>Age at intake</label><input name="age" type="number" min="0" max="120" placeholder="Age"></div><div class="field"><label>Sex *</label><select name="sex" required><option value="">Select sex</option><option>Female</option><option>Male</option><option>Intersex</option><option>Not recorded</option></select></div><div class="field"><label>Barangay *</label><select name="barangay" required><option value="">Select barangay</option><option>Abella</option><option>Allang</option><option>Amtic</option><option>Bacong</option><option>Bagumbayan</option><option>Balanac</option><option>Baligang</option><option>Barayong</option><option>Basag</option><option>Batang</option><option>Bay</option><option>Binanowan</option><option>Binatagan</option><option>Bobonsuran</option><option>Bonga</option><option>Busac</option><option>Busay</option><option>Cabarian</option><option>Calzada</option><option>Catburawan</option><option>Cavasi</option><option>Culliat</option><option>Dunao</option><option>Francia</option><option>Guilid</option><option>Herrera</option><option>Layon</option><option>Macalidong</option><option>Mahaba</option><option>Malama</option><option>Maonon</option><option>Nabonton</option><option>Nasisi</option><option>Oma-oma</option><option>Palapas</option><option>Pandan</option><option>Paulba</option><option>Paulog</option><option>Pinamaniquian</option><option>Pinit</option><option>Ranao-ranao</option><option>San Vicente</option><option>Santa Cruz</option><option>Tagpo</option><option>Tambo</option><option>Tandarura</option><option>Tastas</option><option>Tinago</option><option>Tinampo</option><option>Tiongson</option><option>Tomolin</option><option>Tuburan</option><option>Tula-tula Grande</option><option>Tula-tula Pequeño</option><option>Tupaz</option></select></div><div class="field"><label>Referral source</label><select name="referral"><option>Walk-in</option><option>Barangay / BPC</option><option>PNP</option><option>School</option><option>Hospital / health center</option><option>DSWD</option><option>City / other LGU office</option><option>Court / prosecutor</option><option>Other</option></select></div><div class="field"><label>Assigned social worker</label><select name="worker" id="assignedWorkerSelect"><option value="">Unassigned</option></select><small class="muted">Select the primary accountable social worker.</small></div><div class="field"><label>Additional case team members</label><select name="coWorkers" id="caseTeamSelect" multiple size="4"></select><small class="muted">Hold Ctrl (Windows) to select more than one authorized co-worker. The primary worker is not repeated here.</small></div><div class="section-title">C. Program-Specific Encoding Form</div>
+<div class="field full"><div class="notice" style="margin:0">The fields below change depending on the selected program. Complete only the form relevant to the case.</div></div>
+<div class="program-fields" id="fields-CNSP" hidden><div class="section-title">CNSP — Child Protection / Abuse & Exploitation</div>
+<div class="field"><label>Type of abuse / exploitation</label><select name="cnsp_abuseType"><option value="">Select</option><option>Physical abuse</option><option>Sexual abuse</option><option>Emotional / psychological abuse</option><option>Neglect</option><option>Online sexual abuse / exploitation</option><option>Trafficking / exploitation</option><option>Other / under assessment</option></select></div>
+<div class="field"><label>Case proceeding status</label><select name="cnsp_proceeding"><option value="">Select</option><option>For assessment</option><option>City Prosecutor's Office</option><option>Filed in court</option><option>Ongoing litigation — RTC Family Court</option><option>Plea Bargaining Agreement / decision</option><option>Perpetrator at large</option><option>No legal filing / social case management</option></select></div>
+<div class="field"><label>Child-caring institution referral</label><select name="cnsp_institution"><option value="">Select</option><option>Not referred</option><option>Referral pending</option><option>Referred / admitted</option><option>Discharged / reunified</option></select></div>
+<div class="field"><label>Immediate protection action</label><select name="cnsp_safety"><option value="">Select</option><option>Not yet assessed</option><option>Safety assessment completed</option><option>Safety plan initiated</option><option>Emergency protection / referral</option><option>Protective placement assessed</option><option>Family reunification / reintegration planning</option></select></div>
+<div class="field"><label>Assessment / case plan status</label><select name="cnsp_assessment"><option value="">Select</option><option>For initial assessment</option><option>Assessment ongoing</option><option>Case plan prepared</option><option>Case plan under review</option><option>Monitoring / follow-up</option><option>Case closure review</option></select></div>
+<div class="field"><label>Referral / service coordination</label><select name="cnsp_referral"><option value="">Select</option><option>Social welfare services</option><option>Health / psychosocial services</option><option>PNP / Women and Children Protection Desk</option><option>Prosecutor / court</option><option>School / education services</option><option>Child-caring institution</option><option>Multiple agencies</option><option>None / pending assessment</option></select></div>
+<div class="field full"><label>Protection intervention / case proceedings update</label><textarea name="cnsp_update" placeholder="Brief, non-graphic summary; store sensitive case narratives in restricted files"></textarea></div></div>
+<div class="program-fields" id="fields-VAWC" hidden><div class="section-title">VAWC — Violence Against Women and their Children</div>
+<div class="field"><label>Type of violence</label><select name="vawc_violenceType"><option value="">Select</option><option>Physical</option><option>Sexual</option><option>Psychological</option><option>Economic</option><option>Multiple forms</option><option>For assessment / not classified</option></select></div>
+<div class="field"><label>Relationship to alleged offender</label><select name="vawc_relationship"><option value="">Select</option><option>Current spouse / partner</option><option>Former spouse / partner</option><option>Dating / former dating relationship</option><option>Family member</option><option>Other / unknown</option></select></div>
+<div class="field"><label>Safety / protection action</label><select name="vawc_protection"><option value="">Select</option><option>Safety planning</option><option>Barangay protection order</option><option>TPO / PPO referral</option><option>Emergency shelter / safe referral</option><option>PNP / legal referral</option><option>Not yet assessed</option></select></div>
+<div class="field"><label>Legal / complaint status</label><select name="vawc_legal"><option value="">Select</option><option>Not filed</option><option>Barangay / BPO process</option><option>Referred to PNP</option><option>City Prosecutor</option><option>Filed in court</option><option>Ongoing proceedings</option><option>Decision / closed</option></select></div>
+<div class="field"><label>Risk / safety assessment</label><select name="vawc_risk"><option value="">Select</option><option>Not yet assessed</option><option>Assessment ongoing</option><option>Low / monitored risk</option><option>Elevated risk</option><option>High / urgent safety concern</option></select></div>
+<div class="field"><label>Protection order status</label><select name="vawc_order"><option value="">Select</option><option>Not applicable / not requested</option><option>For information / advice</option><option>BPO requested / in process</option><option>TPO / PPO referral or application</option><option>Order issued</option><option>Order denied / expired</option><option>Unknown / verify</option></select></div>
+<div class="field"><label>Service plan status</label><select name="vawc_plan"><option value="">Select</option><option>For assessment</option><option>Safety plan prepared</option><option>Service plan ongoing</option><option>Referred to partner services</option><option>Monitoring / follow-up</option><option>Closure review</option></select></div>
+<div class="field full"><label>VAWC services / safety plan update</label><textarea name="vawc_update" placeholder="Record services and next steps without unnecessary sensitive details"></textarea></div></div>
+<div class="program-fields" id="fields-CICL" hidden><div class="section-title">CICL — Children in Conflict with the Law</div>
+<div class="field"><label>Offense / alleged violation category</label><select name="cicl_offense"><option value="">Select</option><option>Property-related</option><option>Person-related</option><option>Drug-related</option><option>Cyber-related</option><option>Other / pending classification</option></select></div>
+<div class="field"><label>Stage of case</label><select name="cicl_stage"><option value="">Select</option><option>Initial referral</option><option>Assessment / discernment</option><option>At barangay / police</option><option>Diversion assessment</option><option>Diversion program ongoing</option><option>Referred to prosecutor / court</option><option>Disposition / aftercare</option></select></div>
+<div class="field"><label>Diversion status</label><select name="cicl_diversion"><option value="">Select</option><option>Not applicable / not assessed</option><option>Eligible — assessment pending</option><option>Accepted / ongoing</option><option>Completed</option><option>Unsuccessful / referred onward</option></select></div>
+<div class="field"><label>Intervention / rehabilitation status</label><select name="cicl_intervention"><option value="">Select</option><option>Initial intervention</option><option>Family conferencing</option><option>Community-based intervention</option><option>Residential / institution referral</option><option>Aftercare</option><option>Completed</option></select></div>
+<div class="field"><label>Assessment / discernment process</label><select name="cicl_assessment"><option value="">Select</option><option>Not started</option><option>For assessment</option><option>Assessment ongoing</option><option>Completed — refer to authorized assessment record</option><option>Not applicable / determined by authorized professional</option></select></div>
+<div class="field"><label>Parent / guardian participation</label><select name="cicl_family"><option value="">Select</option><option>Not yet assessed</option><option>Contact pending</option><option>Family conference planned</option><option>Participating in intervention</option><option>Support / referral needed</option></select></div>
+<div class="field"><label>Aftercare / reintegration plan</label><select name="cicl_aftercare"><option value="">Select</option><option>Not yet planned</option><option>Plan in preparation</option><option>Plan active</option><option>Monitoring ongoing</option><option>Completed / closure review</option></select></div>
+<div class="field full"><label>Diversion / rehabilitation progress</label><textarea name="cicl_update" placeholder="Brief progress update and next steps"></textarea></div></div>
+<div class="program-fields" id="fields-CAR" hidden><div class="section-title">CAR — Children at Risk</div>
+<div class="field"><label>Risk category</label><select name="car_risk"><option value="">Select</option><option>Neglect / inadequate care</option><option>Abuse / exploitation concern</option><option>Out of school / educational risk</option><option>Street situation</option><option>Family conflict / vulnerable family</option><option>Risk of offending</option><option>Other / assessment pending</option></select></div>
+<div class="field"><label>Risk level (initial assessment)</label><select name="car_riskLevel"><option value="">Select</option><option>Low</option><option>Moderate</option><option>High</option><option>Urgent / immediate safety concern</option><option>Pending assessment</option></select></div>
+<div class="field"><label>Primary referral / support</label><select name="car_support"><option value="">Select</option><option>Family support / counseling</option><option>Barangay / BPC</option><option>School / education support</option><option>Health / psychosocial services</option><option>DSWD / partner agency</option><option>Protective placement assessment</option><option>Other</option></select></div>
+<div class="field"><label>Family / child assessment status</label><select name="car_assessment"><option value="">Select</option><option>For assessment</option><option>Assessment ongoing</option><option>Intervention plan prepared</option><option>Monitoring</option><option>Referred / transferred</option><option>Case closed</option></select></div>
+<div class="field"><label>Protective factors / strengths</label><select name="car_strengths"><option value="">Select</option><option>Supportive parent / caregiver</option><option>School engagement</option><option>Positive community support</option><option>Access to health / social services</option><option>Multiple protective factors</option><option>To be assessed</option></select></div>
+<div class="field"><label>Family intervention plan</label><select name="car_plan"><option value="">Select</option><option>For assessment</option><option>Plan being prepared</option><option>Plan active</option><option>Monitoring / review</option><option>Referred to partner agency</option><option>Closure review</option></select></div>
+<div class="field"><label>Education / health support need</label><select name="car_need"><option value="">Select</option><option>Education / school support</option><option>Health / psychosocial support</option><option>Family support / parenting</option><option>Economic / basic-needs assistance</option><option>Protection / safety support</option><option>Multiple needs</option><option>Not yet assessed</option></select></div>
+<div class="field full"><label>Risk reduction / family intervention update</label><textarea name="car_update" placeholder="Brief assessment and follow-up plan"></textarea></div></div>
+<div class="section-title">D. Case Management & Intervention</div><div class="field full"><div class="notice" style="margin:0">Use minimum necessary information. Keep detailed assessments, medical/legal documents, and sensitive narratives in approved restricted files. These fields are a working draft and must be checked against current DSWD Field Office V forms and office policy before official use.</div></div><div class="field"><label>Last action date</label><input type="date" name="lastAction"></div><div class="field"><label>Next follow-up / hearing</label><input type="date" name="nextFollowup"></div><div class="field"><label>Referral / court status</label><select name="legalStatus"><option>Not applicable / not recorded</option><option>For assessment</option><option>Referred to agency</option><option>Filed with City Prosecutor</option><option>Filed in court</option><option>Ongoing litigation</option><option>Decision / disposition</option><option>Perpetrator at large</option><option>Referred to child-caring institution</option></select></div><div class="field full"><label>Intervention / action summary (avoid unnecessary sensitive details)</label><textarea name="intervention" placeholder="Brief action taken, service/referral provided, and next steps"></textarea></div><div class="field full"><label>Notes / documents checklist</label><textarea name="notes" placeholder="Document checklist, referral reference, or restricted-file location (do not paste sensitive narratives here)"></textarea></div></div><div class="card" id="customCaseFieldsCard" style="margin:14px 0;display:none"><h3>Additional Program Information</h3><p class="muted">Additional questions configured by the CSWDO Administrator.</p><div class="formgrid" id="customCaseFields"></div></div><div class="actions"><button class="btn" type="button" id="cancelEditBtn" onclick="cancelEdit()" hidden>Cancel Edit</button><button class="btn" type="reset">Clear Form</button><button class="btn primary" type="submit" id="saveCaseBtn">Save Case Record</button></div></div></form></section>
+<section class="page" id="page-schedule"><div class="pagehead"><div><h2>Follow-ups & Hearings</h2><p>Upcoming appointments and cases requiring action.</p></div><button class="btn primary" onclick="showPage('encode')">＋ Add Case / Follow-up</button></div><div class="card"><div class="tablewrap"><table><thead><tr><th>Case ID</th><th>Program</th><th>Case type</th><th>Next follow-up</th><th>Assigned worker</th><th>Status</th></tr></thead><tbody id="scheduleRows"></tbody></table></div></div></section>
+<section class="page" id="page-reports">
+<div class="pagehead"><div><h2>Quarterly Reports</h2><p>Management summaries calculated only from individual case records encoded in this browser.</p></div><button class="btn primary" onclick="exportCSV()">Export case register CSV</button></div>
+<div class="notice"><b>Reporting source:</b> All totals and summaries in this section are calculated exclusively from the Case Records list. Historical aggregate figures shown below are reference-only and are never added to encoded-case totals.</div>
+<div class="filters"><select id="reportYear" onchange="renderReports()"><option>2026</option><option>2025</option><option>2024</option></select><select id="reportProgram" onchange="renderReports()"><option value="ALL">All programs</option><option>CNSP</option><option>VAWC</option><option>CICL</option><option>CAR</option></select><select id="reportQuarter" onchange="renderReports()"><option value="ALL">Full year</option><option value="1">1st Quarter</option><option value="2">2nd Quarter</option><option value="3">3rd Quarter</option><option value="4">4th Quarter</option></select></div>
+<div class="grid four" style="margin-bottom:16px">
+<div class="stat"><span class="statlabel">Encoded case records</span><strong id="reportTotal">0</strong><small>Matching selected filters</small></div>
+<div class="stat"><span class="statlabel">Female</span><strong id="reportFemale">0</strong><small>Encoded records</small></div>
+<div class="stat"><span class="statlabel">Male</span><strong id="reportMale">0</strong><small>Encoded records</small></div>
+<div class="stat"><span class="statlabel">Other / Unrecorded</span><strong id="reportOther">0</strong><small>Encoded records</small></div>
+</div>
+<div class="grid reportgrid">
+<div class="reportbox"><h3>Quarterly case summary</h3><p class="sub">New, carry-over and total encoded records by date received</p><div class="tablewrap"><table><thead><tr><th>Quarter</th><th>New</th><th>Carry-over</th><th>Total encoded</th></tr></thead><tbody id="reportQuarterRows"></tbody><tfoot><tr><th>Total</th><th id="reportNewTotal">0</th><th id="reportCarryTotal">0</th><th id="reportQuarterTotal">0</th></tr></tfoot></table></div></div>
+<div class="reportbox"><h3>Program summary</h3><p class="sub">Counts from encoded individual records only</p><div class="tablewrap"><table><thead><tr><th>Program</th><th>Encoded cases</th><th>Ongoing</th><th>Resolved / closed</th></tr></thead><tbody id="reportProgramRows"></tbody><tfoot><tr><th>Total</th><th id="reportProgramTotal">0</th><th id="reportOngoingTotal">0</th><th id="reportClosedTotal">0</th></tr></tfoot></table></div></div>
+</div>
+<div class="grid reportgrid" style="margin-top:16px">
+<div class="reportbox"><h3>Program-specific classification</h3><p class="sub">Breakdown of recorded case types / concerns from encoded records</p><div class="tablewrap"><table><thead><tr><th>Program</th><th>Recorded classification</th><th>Cases</th></tr></thead><tbody id="reportClassificationRows"></tbody></table></div></div>
+<div class="reportbox"><h3>Barangay summary</h3><p class="sub">Distribution of encoded records by barangay</p><div class="tablewrap"><table><thead><tr><th>Barangay</th><th>Cases</th></tr></thead><tbody id="reportBarangayRows"></tbody></table></div></div>
+</div>
+<div class="card" style="margin-top:16px"><h3>Report preparation</h3><p class="sub">Provisional internal CSWDO report. Verify classifications and required indicators against current DSWD Field Office V templates before official submission.</p><div class="actions"><button class="btn" onclick="exportQuarterlyCSV()">Export filtered report CSV</button><button class="btn" onclick="window.print()">Print / Save as PDF</button></div></div>
+<div class="card" style="margin-top:16px"><h3>Historical CNSP reference figures — NOT included in encoded totals</h3><div class="sub">Previously supplied aggregate figures. These are displayed for comparison only and are not individual case records.</div><div class="tablewrap"><table><thead><tr><th>Year</th><th>1st Quarter</th><th>2nd Quarter</th><th>3rd Quarter</th><th>4th Quarter</th><th>Annual reported total</th></tr></thead><tbody><tr><td>2025</td><td>9</td><td>5</td><td>4</td><td>10</td><td><b>27</b></td></tr><tr><td>2026</td><td>6 new; 10 carry-over</td><td>7 new; 13 carry-over</td><td>7 new</td><td>Pending update</td><td><b>20 new cases</b></td></tr></tbody></table></div><p class="muted" style="font-size:11px;margin-bottom:0">Other 2026 CNSP reference figures supplied: 5 cases filed in court with perpetrators at large; 3 cases with decisions through PBA at RTC/Family Court; 8 cases filed at the City Prosecutor's Office; 13 cases with ongoing litigation at RTC Family Court. Reference figures only; not added to the case register, dashboard, or encoded-case reports.</p></div>
+</section>
+<section class="page" id="page-references"><div class="pagehead"><div><h2>DSWD Program References</h2><p>Official policy, case-management guidance, and knowledge resources to guide program-specific encoding.</p></div><span class="pill">Reference library</span></div>
+<div class="notice"><b>Important:</b> These references guide the design of the system's fields and workflow; they are not a substitute for the latest official DSWD Field Office V reporting templates, prescribed forms, or instructions. Confirm required fields and quarterly indicators with the responsible DSWD office before using reports officially.</div>
+<div class="grid two">
+<div class="card"><h3>CNSP — Children in Need of Special Protection</h3><p class="sub">Child protection, abuse/exploitation, reporting, referral, legal proceedings, and intervention tracking.</p><p>Suggested encoding areas: referral source, child-protection concern, immediate safety/protection action, case assessment, legal/prosecution status, placement or child-caring institution referral, interventions, and follow-up.</p><p><a href="https://www.dswd.gov.ph/dswd-pledges-support-for-enhanced-protocol-on-case-management-of-child-victims-of-abuse/" target="_blank" rel="noopener">DSWD: Revised protocol for child victims of abuse, neglect, exploitation and discrimination (CANE+D)</a></p><p><a href="https://dromic.dswd.gov.ph/wp-content/uploads/2017/03/NDRP-Earthquake-Tsunamiv2.pdf" target="_blank" rel="noopener">DSWD/DROMIC: Flowchart of reporting for children in need of special protection</a></p></div>
+<div class="card"><h3>VAWC — Violence Against Women and their Children</h3><p class="sub">Gender-responsive, survivor-centered case management and coordinated services.</p><p>Suggested encoding areas: type of violence, relationship to alleged perpetrator, safety and protection needs, risk/needs assessment, referral and service plan, protection-order/legal status, interdisciplinary referrals, and follow-up. Limit sensitive narrative and identifying details to authorized records.</p><p><a href="https://stb.dswd.gov.ph/grcm" target="_blank" rel="noopener">DSWD Social Technology Bureau: Gender-Responsive Case Management (GRCM)</a></p><p><a href="https://kmportal.dswd.gov.ph/knowledge-products/learning-material/trainers-manual-gender-responsive-case-management-grcm-vaw" target="_blank" rel="noopener">DSWD Knowledge Management Portal: GRCM Trainers' Manual for VAW Survivors</a></p><p><a href="https://standards.dswd.gov.ph/an-online-initiative-for-the-protection-of-women-and-children/" target="_blank" rel="noopener">DSWD Standards Bureau: VAWC reporting, protection orders, and referral pathways</a></p></div>
+<div class="card"><h3>CICL — Children in Conflict with the Law</h3><p class="sub">Child-sensitive justice, assessment, diversion, intervention, rehabilitation, and reintegration.</p><p>Suggested encoding areas: incident/referral details, age at time of alleged offense, assessment and discernment-related process where applicable, diversion level/status, court/prosecutor status, intervention plan, family participation, progress reports, and reintegration/aftercare. Avoid treating a child as convicted based solely on an allegation.</p><p><a href="https://www.dswd.gov.ph/wp-content/uploads/2025/02/AO_2007-010.pdf" target="_blank" rel="noopener">DSWD Administrative Order No. 10, s. 2007: Guidelines for Social Workers in Handling and Treatment of CICL</a></p><p><a href="https://kmportal.dswd.gov.ph/knowledge-products/how-guide/buklod-paglaom-para-sa-cicl-holistic-psychosocial-and-economic-hope" target="_blank" rel="noopener">DSWD Knowledge Management Portal: Buklod Paglaom / HoPE Interventions for CICL Program Manual</a></p><p><a href="https://www.dswd.gov.ph/dswd-official-explains-proper-handling-of-cases-involving-children-in-conflict-with-the-law/" target="_blank" rel="noopener">DSWD: Proper handling and management of CICL cases</a></p></div>
+<div class="card"><h3>CAR — Children at Risk</h3><p class="sub">Early identification of risk, assessment, family/community support, referral, and prevention.</p><p>Suggested encoding areas: risk indicators, source of identification, child and family assessment, immediate safety concerns, strengths/protective factors, case plan, referrals, family/community interventions, and review dates. CAR must remain distinguishable from CICL; classification should follow applicable law and DSWD/JJWC guidance.</p><p><a href="https://www.dswd.gov.ph/download/compendium_of_dswd_and_selected_swd_statistics/10-March-2023_v5_2021-Compendium-of-DSWD.pdf" target="_blank" rel="noopener">DSWD: Compendium of DSWD and Selected Social Welfare and Development Statistics (definitions including Child at Risk)</a></p><p><a href="https://old.dswd.gov.ph/download/implementing_rules_and_regulations_irrs/Revised-Implementing-Rules-and-Regulations-of-RA-9344-as-amended-by-RA-10630.pdf" target="_blank" rel="noopener">Revised IRR of RA 9344, as amended by RA 10630 (community-based programs and rehabilitation)</a></p></div>
+</div>
+<div class="card" style="margin-top:15px"><h3>Before approving official reports</h3><ol><li>Obtain the current program-specific forms and quarterly reporting indicators from DSWD Field Office V or the designated provincial/regional focal person.</li><li>Map each official field to the corresponding encoding field; retain official labels and required breakdowns.</li><li>Keep aggregate quarterly counts separate from individual case records to avoid double counting carry-over cases.</li><li>Apply least-privilege access, audit logs, secure file storage, and approved retention/disposal rules before encoding real client information.</li><li>Record the reference title, issuing office, issuance number/date, version, and date verified whenever an official form or policy is updated.</li></ol></div>
+</section>
+</div></main></div>
+<script>
+// Shared session state is declared before form initialization to avoid cross-script temporal-dead-zone errors.
+let cswdoUser = null, cswdoProfile = null, cswdoProfiles = [];
+let cswdoAllowedPrograms = [];
+const KEY='cswdo_case_demo_v2';let cases=JSON.parse(localStorage.getItem(KEY)||'[]');const $=id=>document.getElementById(id);const today=new Date().toISOString().slice(0,10);document.querySelector('[name="dateReceived"]').value=today;
+function toggleProgramFields(){const selected=$('programInput').value;const permitted=cswdoProfile?.role!=='social_worker'||cswdoAllowedPrograms.includes(selected);document.querySelectorAll('.program-fields').forEach(el=>{const active=permitted&&el.id==='fields-'+selected;el.hidden=!active;el.querySelectorAll('input,select,textarea').forEach(f=>f.disabled=!active)});const customCard=$('customCaseFieldsCard');if(customCard&& !permitted)customCard.style.display='none';}
+const caseTypeOptions={
+ CNSP:['Physical abuse','Sexual abuse','Emotional / psychological abuse','Neglect','Abandonment','Exploitation','Trafficking','Child labor','Street situation / street-connected child','Online sexual abuse / exploitation','Child in armed conflict','Child with disability needing protection','Other (please specify)','For assessment / not yet classified'],
+ VAWC:['Physical violence','Sexual violence','Psychological violence','Economic abuse','Multiple forms of violence','Other (please specify)','For assessment / not yet classified'],
+ CICL:['Property-related alleged offense','Person-related alleged offense','Drug-related alleged offense','Cyber-related alleged offense','Other alleged offense (please specify)','Pending verification / classification'],
+ CAR:['Risk of abuse or neglect','Neglect / inadequate care','Abandonment or risk of abandonment','Exploitation / child labor risk','Street situation / street-connected child','Family conflict or breakdown','School-related vulnerability','Exposure to violence or harmful environment','Trafficking / exploitation risk','Other (please specify)','For assessment / not yet classified']
+};
+function updateCaseTypeOptions(preserveValue=''){
+ const program=$('programInput').value, sel=$('caseTypeInput'), other=$('caseTypeOther');
+ const options=caseTypeOptions[program]||[];
+ sel.innerHTML='<option value="">Select a concern</option>'+options.map(v=>`<option>${esc(v)}</option>`).join('');
+ if(preserveValue && options.includes(preserveValue)) sel.value=preserveValue;
+ else if(preserveValue){sel.value='Other (please specify)';other.value=preserveValue;}
+ other.style.display=sel.value==='Other (please specify)'?'block':'none';
+ other.required=sel.value==='Other (please specify)';
+}
+$('programInput').addEventListener('change',()=>{toggleProgramFields();renderCustomCaseFields();if(typeof applyManagedDropdownOptions==='function')applyManagedDropdownOptions();});
+toggleProgramFields();
+$('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
+$('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();});
+updateCaseTypeOptions();
+
+function showPage(name){if(['user-roles','staff-accounts','activity-logs'].includes(name) && cswdoProfile?.role!=='admin'){alert('Administrator access only.');return;}document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$('page-'+name).classList.add('active');document.querySelectorAll('.nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));const titles={dashboard:'Case Management Dashboard',cases:'Case Records',encode:'Case Intake & Encoding',schedule:'Follow-ups & Hearings',reports:'Quarterly Reports',references:'DSWD Program References','user-roles':'User Roles & Permissions','staff-accounts':'Staff Accounts','activity-logs':'User Activity Logs'};$('topTitle').textContent=titles[name]||name;$('crumb').textContent=titles[name]||name;if(name==='dashboard')renderDashboard();if(name==='cases')renderCases();if(name==='schedule')renderSchedule();if(name==='reports')renderReports();if(name==='staff-accounts')renderStaffAccounts();if(name==='activity-logs')renderActivityLogs();}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('[data-program]').forEach(b=>b.addEventListener('click',()=>{if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(b.dataset.program))return;showPage('cases');$('caseProgram').value=b.dataset.program;renderCases()}));function save(){localStorage.setItem(KEY,JSON.stringify(cases))}function quarter(date){if(!date)return 1;return Math.floor(new Date(date+'T12:00:00').getMonth()/3)+1}function badge(s){let cls=['Resolved','Closed'].includes(s)?'green':['Urgent','Emergency'].includes(s)?'red':['For Follow-up','Ongoing'].includes(s)?'orange':s==='Referred'?'purple':'';return `<span class="pill ${cls}">${esc(s||'Open')}</span>`}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function filtered(year,program='ALL',q='ALL'){return cases.filter(c=>(!year||String(c.year)===String(year))&&(program==='ALL'||c.program===program)&&(q==='ALL'||String(quarter(c.dateReceived))===String(q)))}function renderDashboard(){let y=$('filterYear').value,p=$('filterProgram').value,q=$('filterQuarter').value;let arr=filtered(y,p,q);$('dashYear').textContent=y;$('statTotal').textContent=arr.length;['CNSP','VAWC','CICL','CAR'].forEach(k=>$('stat'+k).textContent=arr.filter(c=>c.program===k).length);let qcounts=[1,2,3,4].map(n=>arr.filter(c=>quarter(c.dateReceived)===n).length),max=Math.max(1,...qcounts);$('quarterBars').innerHTML=qcounts.map((v,i)=>`<div class="barrow"><span>${['1st','2nd','3rd','4th'][i]} Quarter</span><div class="track"><div class="fill" style="width:${v/max*100}%;background:${['#2476b9','#319b6c','#df8b31','#8a62bd'][i]}"></div></div><b>${v}</b></div>`).join('');let statuses=['Open','Ongoing','For Follow-up','Referred','Resolved','Closed'];let counts=statuses.map(s=>arr.filter(c=>c.status===s).length),mx=Math.max(1,...counts);$('statusBars').innerHTML=statuses.map((s,i)=>`<div class="barrow"><span>${s}</span><div class="track"><div class="fill" style="width:${counts[i]/mx*100}%;background:${['#2476b9','#df8b31','#d8a43b','#8a62bd','#319b6c','#74869a'][i]}"></div></div><b>${counts[i]}</b></div>`).join('');const barHTML=(items,color)=>{let max=Math.max(1,...items.map(x=>x[1]));return items.length?items.map(([label,val],i)=>`<div class="barrow"><span>${esc(label)}</span><div class="track"><div class="fill" style="width:${val/max*100}%;background:${color[i%color.length]}"></div></div><b>${val}</b></div>`).join(''):`<div class="empty">No data for selected filters.</div>`};const colors=['#2476b9','#319b6c','#df8b31','#8a62bd','#d65b6b','#478f9b'];$('sexBars').innerHTML=barHTML(['Female','Male','Other','Unrecorded'].map(k=>[k,arr.filter(c=>String(c.sex||'').toLowerCase()===k.toLowerCase()||(k==='Unrecorded'&&!c.sex)).length]),colors);const dashboardPrograms = cswdoProfile?.role === 'social_worker' ? cswdoAllowedPrograms : ['CNSP','VAWC','CICL','CAR'];
+  $('programBars').innerHTML=barHTML(dashboardPrograms.map(k=>[k,arr.filter(c=>c.program===k).length]),colors);const groupBy=key=>{const m={};arr.forEach(c=>{let k=String(c[key]||'Unrecorded').trim()||'Unrecorded';m[k]=(m[k]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,10)};$('barangayBars').innerHTML=barHTML(groupBy('barangay'),colors);$('concernBars').innerHTML=barHTML(groupBy('caseType'),colors);let recent=[...arr].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,6);$('recentRows').innerHTML=recent.length?recent.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No case records for this filter. Use “Encode New Case” to add a record.</td></tr>`}
+const ligaoBarangays=['Allang','Amtic','Bacong','Bagumbayan','Balaogan','Baligang',' Barayong','Batang','Bay','Binanowan','Binatagan','Bonga','Busac','Busay','Cabarian','Cagbacong','Calzada','Catburawan','Cotmon','Dunao','Francia','Guilid','Herrera','Layon','Ligu','Mahayag','Maonon','Nasisi','Ninoy Aquino','Pandan','Paulba','Pinit','Rangas','Rawis','Rizal','Sagumay','Santa Cruz','Tambo','Tandarora','Tula-tula Grande','Tula-tula Pequeño','Tupas','Tuburan','Tinampo','Tomolin','Tuburan','Tula-tula','Tiongson','San Vicente','San Isidro','San Jose','San Roque','Sta. Maria','Sta. Cruz','Danao'];
+function fillCaseFilterOptions(){const b=$('caseBarangay'),w=$('caseWorker');const currentB=b.value,currentW=w.value;const known=[...new Set([...ligaoBarangays.map(x=>x.trim()),...cases.map(c=>c.barangay).filter(Boolean)])].sort((a,b)=>a.localeCompare(b));b.innerHTML='<option value="ALL">All barangays</option>'+known.map(x=>`<option>${esc(x)}</option>`).join('');if([...b.options].some(o=>o.value===currentB))b.value=currentB;const workers=[...new Set(cases.map(c=>String(c.worker||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));w.innerHTML='<option value="ALL">All social workers</option>'+workers.map(x=>`<option>${esc(x)}</option>`).join('');if([...w.options].some(o=>o.value===currentW))w.value=currentW;}
+function resetCaseFilters(){['caseSearch'].forEach(id=>$(id).value='');['caseProgram','caseBarangay','caseWorker','caseStatus'].forEach(id=>$(id).value='ALL');renderCases()}
+function renderCases(){fillCaseFilterOptions();let q=($('caseSearch').value||'').toLowerCase().trim(),p=$('caseProgram').value,s=$('caseStatus').value,b=$('caseBarangay').value,w=$('caseWorker').value;let arr=cases.filter(c=>(p==='ALL'||c.program===p)&&(s==='ALL'||c.status===s)&&(b==='ALL'||c.barangay===b)&&(w==='ALL'||String(c.worker||'').trim()===w)&&[c.id,c.folderNo,c.caseType,c.barangay,c.sex,c.clientCode,c.worker].some(v=>String(v||'').toLowerCase().includes(q)));$('caseCount').textContent=`Showing ${arr.length} of ${cases.length} records` ;const todayLocal=new Date();todayLocal.setHours(0,0,0,0);const overdue=cases.filter(c=>c.nextFollowup&&new Date(c.nextFollowup+'T00:00:00')<todayLocal&&!['Closed','Resolved'].includes(c.status));$('followupAlert').textContent=overdue.length?`• ${overdue.length} overdue follow-up${overdue.length===1?'':'s'} across all records`: '• No overdue follow-ups across saved records';$('caseRows').innerHTML=arr.length?arr.map(c=>`<tr><td>${esc(c.folderNo||'—')}</td><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.barangay||'—')}</td><td>${esc(c.sex||'—')}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td><td><button class="btn" onclick="viewCase('${esc(c.id)}')">View</button> <button class="btn primary" onclick="editCase('${esc(c.id)}')">Edit</button> <button class="btn" onclick="deleteCase('${esc(c.id)}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="10" class="empty">No matching case records.</td></tr>`}
+function viewCase(id){let c=cases.find(x=>x.id===id);if(!c)return;let msg=`Case ID: ${c.id}\nCASE FOLDER NO.: ${c.folderNo||'—'}\nProgram: ${c.program}\nCase type: ${c.caseType}\nClient code: ${c.clientCode}\nDate received: ${c.dateReceived}\nDate opened: ${c.dateOpened||'—'}\nLast assessment: ${c.lastAssessment||'—'}\nStatus: ${c.status}\nClassification: ${c.classification}\nBarangay: ${c.barangay||'—'}\nSex: ${c.sex||'—'}\nAssigned worker: ${c.worker||'—'}\nNext follow-up: ${c.nextFollowup||'—'}\nLegal status: ${c.legalStatus}\nIntervention: ${c.intervention||'—'}\nNotes: ${c.notes||'—'}`;alert(msg)}function deleteCase(id){if(confirm('Delete this demo case record? This cannot be undone.')){cases=cases.filter(c=>c.id!==id);save();renderCases();renderDashboard();renderReports()}}
+let editingCaseId=null;
+function editCase(id){const c=cases.find(x=>x.id===id);if(!c)return;editingCaseId=id;showPage('encode');const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();renderCustomCaseFields(c);updateCaseTypeOptions(c.caseType||'');for(const [key,value] of Object.entries(c)){if(key==='caseType')continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});}
+function cancelEdit(){editingCaseId=null;$('caseForm').reset();$('dateReceived').value=today;toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}
+$('caseForm').addEventListener('reset',()=>setTimeout(()=>{if(editingCaseId){editingCaseId=null;$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}$('dateReceived').value=today;toggleProgramFields()},0));
+$('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target).entries());if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(d.program)){alert('You are not authorized to encode cases under this program.');return;}if(d.caseType==='Other (please specify)'){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType){alert('Please specify the other case type / concern.');return;}}delete d.caseTypeOther;const folder=(d.folderNo||'').trim().toLowerCase();if(cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===folder&&c.id!==editingCaseId)){alert('A record with this Case Folder No. already exists. Please check the number before saving.');return;}let c;if(editingCaseId){const old=cases.find(x=>x.id===editingCaseId);if(!old)return;c={...old,...d,year:Number((d.dateReceived||today).slice(0,4)),updatedAt:new Date().toISOString()};cases=cases.map(x=>x.id===editingCaseId?c:x);}else{let y=(d.dateReceived||today).slice(0,4),n=String(cases.filter(x=>x.program===d.program&&x.year===Number(y)).length+1).padStart(4,'0');c={...d,year:Number(y),id:`${d.program}-${y}-${n}`,createdAt:new Date().toISOString()};cases.push(c);}save();const savedId=c.id;editingCaseId=null;e.target.reset();$('dateReceived').value=today;updateCaseTypeOptions();toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;const wasUpdated=Boolean(c.updatedAt);$('successTitle').textContent=wasUpdated?'Case record updated successfully':'Case encoded successfully';$('successMessage').textContent=`Case ID: ${savedId}. Opening Case Records…`;$('successToast').hidden=false;setTimeout(()=>{showPage('cases');$('caseProgram').value='ALL';renderCases();$('successToast').hidden=true;},1100)});function renderSchedule(){let arr=cases.filter(c=>c.nextFollowup).sort((a,b)=>a.nextFollowup.localeCompare(b.nextFollowup));$('scheduleRows').innerHTML=arr.length?arr.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.nextFollowup)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No follow-ups scheduled. Add a next follow-up date when encoding a case.</td></tr>`}
+function safeReportText(v){return String(v??'').replace(/[&<>\"']/g, ch => ch==='&'?'&amp;':ch==='<'?'&lt;':ch==='>'?'&gt;':ch==='\"'?'&quot;':'&#39;');}
+function renderReports(){
+let y=$('reportYear').value,p=$('reportProgram').value,q=$('reportQuarter').value;
+let arr=cases.filter(c=>String(c.year||String(c.dateReceived||'').slice(0,4))===String(y)&&(p==='ALL'||c.program===p)&&(q==='ALL'||String(quarter(c.dateReceived))===String(q)));
+const female=arr.filter(c=>String(c.sex||'').toLowerCase()==='female').length;
+const male=arr.filter(c=>String(c.sex||'').toLowerCase()==='male').length;
+$('reportTotal').textContent=arr.length;$('reportFemale').textContent=female;$('reportMale').textContent=male;$('reportOther').textContent=arr.length-female-male;
+let qnums=[1,2,3,4].filter(n=>q==='ALL'||String(n)===q),newTotal=0,carryTotal=0;
+$('reportQuarterRows').innerHTML=qnums.map(n=>{let a=arr.filter(c=>quarter(c.dateReceived)===n),nn=a.filter(c=>c.classification==='New case').length,cc=a.filter(c=>c.classification==='Carry-over / continuing case').length;newTotal+=nn;carryTotal+=cc;return `<tr><td>${['1st','2nd','3rd','4th'][n-1]}</td><td>${nn}</td><td>${cc}</td><td><b>${a.length}</b></td></tr>`}).join('');
+$('reportNewTotal').textContent=newTotal;$('reportCarryTotal').textContent=carryTotal;$('reportQuarterTotal').textContent=arr.length;
+let programs=['CNSP','VAWC','CICL','CAR'].filter(k=>p==='ALL'||p===k),programTotal=0,ongoingTotal=0,closedTotal=0;
+$('reportProgramRows').innerHTML=programs.map(k=>{let a=arr.filter(c=>c.program===k),ongoing=a.filter(c=>['Open','Ongoing','For Follow-up','Referred'].includes(c.status)).length,closed=a.filter(c=>['Resolved','Closed'].includes(c.status)).length;programTotal+=a.length;ongoingTotal+=ongoing;closedTotal+=closed;return `<tr><td>${k}</td><td>${a.length}</td><td>${ongoing}</td><td>${closed}</td></tr>`}).join('');
+$('reportProgramTotal').textContent=programTotal;$('reportOngoingTotal').textContent=ongoingTotal;$('reportClosedTotal').textContent=closedTotal;
+const classRows={};arr.forEach(c=>{let label=c.caseType||'Not specified';let key=(c.program||'Unspecified')+'||'+label;classRows[key]=(classRows[key]||0)+1;});
+$('reportClassificationRows').innerHTML=Object.entries(classRows).sort((a,b)=>b[1]-a[1]).map(([k,n])=>{let [pr,label]=k.split('||');return `<tr><td>${safeReportText(pr)}</td><td>${safeReportText(label)}</td><td>${n}</td></tr>`}).join('')||'<tr><td colspan="3">No encoded records for selected filters.</td></tr>';
+const brgy={};arr.forEach(c=>{let b=c.barangay||'Not specified';brgy[b]=(brgy[b]||0)+1;});
+$('reportBarangayRows').innerHTML=Object.entries(brgy).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`<tr><td>${safeReportText(b)}</td><td>${n}</td></tr>`).join('')||'<tr><td colspan="2">No encoded records for selected filters.</td></tr>';
+}
+function exportQuarterlyCSV(){
+const y=$('reportYear').value,p=$('reportProgram').value,q=$('reportQuarter').value;
+const arr=cases.filter(c=>String(c.year||String(c.dateReceived||'').slice(0,4))===String(y)&&(p==='ALL'||c.program===p)&&(q==='ALL'||String(quarter(c.dateReceived))===String(q)));
+const cols=['folderNo','program','caseType','dateReceived','classification','status','clientCode','age','sex','barangay','worker','nextFollowup'];
+const csv=[cols.join(','),...arr.map(c=>cols.map(k=>'"'+String(c[k]??'').replace(/"/g,'""')+'"').join(','))].join('\\r\\n');
+const blob=new Blob(['\\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CSWDO_${p}_${y}_Q${q==='ALL'?'ALL':q}_Report.csv`;a.click();URL.revokeObjectURL(a.href);
+}
+function exportCSV(){let cols=['id','folderNo','program','caseType','dateReceived','dateOpened','lastAssessment','classification','status','priority','clientCode','age','sex','barangay','referral','cnsp_abuseType','cnsp_proceeding','cnsp_institution','cnsp_update','vawc_violenceType','vawc_relationship','vawc_protection','vawc_legal','vawc_update','cicl_offense','cicl_stage','cicl_diversion','cicl_intervention','cicl_update','car_risk','car_riskLevel','car_support','car_assessment','car_update','worker','lastAction','nextFollowup','legalStatus','intervention','notes'];let csv=[cols.join(','),...cases.map(c=>cols.map(k=>'"'+String(c[k]??'').replace(/"/g,'""')+'"').join(','))].join('\r\n');let blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='CSWDO_case_register_demo.csv';a.click();URL.revokeObjectURL(a.href)}renderDashboard();renderReports();
+</script>
+<!-- Supabase browser SDK. The publishable key is designed for client-side use; RLS is mandatory. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const CSWDO_PORTAL = "staff";
+/* CSWDO SUPABASE INTEGRATION
+   Project URL and publishable key supplied by the project owner.
+   Never place a service_role/secret key in this file.
+*/
+const CSWDO_SUPABASE_URL = 'https://zjbneacjyfhrczgbhwzt.supabase.co';
+const CSWDO_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_QywjU6McljGl7_hPWHz-6Q_I9Qa_3eQ';
+const cswdoClient = window.supabase.createClient(CSWDO_SUPABASE_URL, CSWDO_SUPABASE_PUBLISHABLE_KEY);
+// Shared session state is declared before the first application script.
+let cswdoLoading = false;
+
+function cswdoMessage(msg, isError=true) {
+  const el = document.getElementById('loginError');
+  if (el) { el.textContent = msg; el.style.color = isError ? '#b42332' : '#187448'; }
+}
+function cswdoStatusLabel(status) {
+  return status === 'New' ? 'Open' : status === 'Ongoing Intervention' ? 'Ongoing' : status;
+}
+function cswdoDbStatus(status) {
+  return status === 'Open' ? 'New' : status === 'Ongoing' ? 'Ongoing Intervention' : status;
+}
+function cswdoToApp(row) {
+  const details = row.program_details || {};
+  const profile = cswdoProfiles.find(p => p.id === row.assigned_to);
+  return {
+    ...details,
+    id: row.case_code,
+    dbId: row.id,
+    folderNo: row.folder_no,
+    program: row.program,
+    caseType: row.case_type,
+    dateReceived: row.date_received,
+    dateOpened: row.date_opened || '',
+    lastAssessment: row.last_assessment || '',
+    year: row.case_year || Number(String(row.date_received).slice(0,4)),
+    classification: row.classification || 'New case',
+    status: cswdoStatusLabel(row.status),
+    clientCode: row.client_code || '',
+    age: row.age ?? '',
+    sex: row.sex || '',
+    barangay: row.barangay || '',
+    referral: row.referral_source || details.referral || '',
+    worker: profile?.full_name || (row.assigned_to === cswdoUser?.id ? cswdoProfile?.full_name : '') || '',
+    nextFollowup: row.next_followup || '',
+    legalStatus: row.legal_status || details.legalStatus || '',
+    intervention: row.intervention || details.intervention || '',
+    notes: row.notes || '',
+    lastAction: row.last_action || '',
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    priority: details.priority || 'Routine'
+  };
+}
+let cswdoCustomFields = [];
+async function loadCustomFormFields(){
+  const {data,error}=await cswdoClient.from('case_form_fields').select('*').eq('is_active',true).order('sort_order').order('created_at');
+  if(error){console.warn('Custom form fields unavailable:',error.message);cswdoCustomFields=[];}
+  else cswdoCustomFields=data||[];
+  renderCustomCaseFields();
+}
+function renderCustomCaseFields(saved={}){
+  const program=document.getElementById('programInput')?.value;
+  if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(program)){const w=document.getElementById('customCaseFields');const c=document.getElementById('customCaseFieldsCard');if(w)w.innerHTML='';if(c)c.style.display='none';return;}
+  const wrap=document.getElementById('customCaseFields'); const card=document.getElementById('customCaseFieldsCard');
+  if(!wrap||!card)return;
+  const fields=cswdoCustomFields.filter(f=>f.program===program);
+  card.style.display=fields.length?'block':'none';
+  wrap.innerHTML=fields.map(f=>{
+    const name='custom_'+f.id, val=saved[name]??''; let control='';
+    if(f.field_type==='textarea') control=`<textarea name="${name}" ${f.is_required?'required':''}>${esc(val)}</textarea>`;
+    else if(f.field_type==='select') control=`<select name="${name}" ${f.is_required?'required':''}><option value="">Select…</option>${(f.options||[]).map(o=>`<option ${String(val)===String(o)?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
+    else if(f.field_type==='date'||f.field_type==='number') control=`<input type="${f.field_type}" name="${name}" value="${esc(val)}" ${f.is_required?'required':''}>`;
+    else control=`<input type="text" name="${name}" value="${esc(val)}" ${f.is_required?'required':''}>`;
+    return `<div class="field"><label>${esc(f.label)}${f.is_required?' *':''}</label>${control}${f.help_text?`<small class="muted">${esc(f.help_text)}</small>`:''}</div>`;
+  }).join('');
+}
+function openFormManagement(){
+ if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');
+ showPage('form-management'); loadFormManagement();
+}
+async function loadFormManagement(){
+ const body=document.getElementById('formFieldRows'); if(!body)return;
+ body.innerHTML='<tr><td colspan="6">Loading…</td></tr>';
+ const {data,error}=await cswdoClient.from('case_form_fields').select('*').order('program').order('sort_order');
+ if(error){body.innerHTML=`<tr><td colspan="6">${esc(error.message)}. Run the supplied SQL migration first.</td></tr>`;return;}
+ body.innerHTML=(data||[]).map(f=>`<tr><td>${esc(f.program)}</td><td>${esc(f.label)}</td><td>${esc(f.field_type)}</td><td>${f.is_required?'Required':'Optional'}</td><td>${f.is_active?'Active':'Inactive'}</td><td><button class="btn" onclick="editFormField('${f.id}')">Edit</button> <button class="btn danger" onclick="removeFormField('${f.id}')">Remove</button></td></tr>`).join('')||'<tr><td colspan="6">No additional questions yet.</td></tr>';
+}
+function openFormFieldEditor(row=null){
+ document.getElementById('formFieldId').value=row?.id||'';
+ document.getElementById('formFieldProgram').value=row?.program||'CNSP';
+ document.getElementById('formFieldLabel').value=row?.label||'';
+ document.getElementById('formFieldType').value=row?.field_type||'text';
+ document.getElementById('formFieldOptions').value=(row?.options||[]).join('\n');
+ document.getElementById('formFieldHelp').value=row?.help_text||'';
+ document.getElementById('formFieldRequired').checked=!!row?.is_required;
+ document.getElementById('formFieldActive').checked=row?!!row.is_active:true;
+ document.getElementById('formFieldEditor').style.display='block';
+}
+async function editFormField(id){const {data,error}=await cswdoClient.from('case_form_fields').select('*').eq('id',id).single();if(error)return alert(error.message);openFormFieldEditor(data);}
+async function removeFormField(id){if(!confirm('Deactivate this question? Historical case answers will be preserved.'))return;const {error}=await cswdoClient.from('case_form_fields').update({is_active:false}).eq('id',id);if(error)return alert(error.message);await loadFormManagement();await loadCustomFormFields();}
+document.getElementById('formFieldForm')?.addEventListener('submit',async e=>{
+ e.preventDefault(); if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');
+ const id=document.getElementById('formFieldId').value;
+ const type=document.getElementById('formFieldType').value;
+ const options=document.getElementById('formFieldOptions').value.split('\n').map(x=>x.trim()).filter(Boolean);
+ if(type==='select'&&options.length<1)return alert('Add at least one dropdown option, one per line.');
+ const payload={program:document.getElementById('formFieldProgram').value,label:document.getElementById('formFieldLabel').value.trim(),field_type:type,options:type==='select'?options:[],help_text:document.getElementById('formFieldHelp').value.trim()||null,is_required:document.getElementById('formFieldRequired').checked,is_active:document.getElementById('formFieldActive').checked,updated_at:new Date().toISOString()};
+ const q=id?cswdoClient.from('case_form_fields').update(payload).eq('id',id):cswdoClient.from('case_form_fields').insert({...payload,created_by:cswdoUser.id});
+ const {error}=await q;if(error)return alert('Unable to save question: '+error.message);
+ document.getElementById('formFieldEditor').style.display='none';await loadFormManagement();await loadCustomFormFields();alert('Form question saved. It will appear on new case entries.');
+});
+
+function cswdoDetailsFromForm(d) {
+  const main = new Set([
+    'program','folderNo','caseType','dateReceived','dateOpened','classification','status',
+    'clientCode','age','sex','barangay','referral','worker','priority','nextFollowup',
+    'legalStatus','intervention','notes','lastAction','lastAssessment'
+  ]);
+  const details = {};
+  Object.entries(d).forEach(([k,v]) => { if (!main.has(k) && v !== '') details[k] = v; });
+  details.priority = d.priority || 'Routine';
+  return details;
+}
+async function cswdoLoadProfiles() {
+  const {data,error} = await cswdoClient.from('profiles')
+    .select('id,full_name,role,is_active,username,email,primary_program')
+    .order('full_name');
+  if (error) throw error;
+  cswdoProfiles = data || [];
+  const teamSelect = document.getElementById('caseTeamSelect');
+  if (teamSelect) {
+    teamSelect.innerHTML = cswdoProfiles.filter(p=>p.role==='social_worker'&&p.is_active&&p.id!==cswdoUser?.id)
+      .map(p=>`<option value="${p.id}">${esc(p.full_name||'Unnamed staff')}</option>`).join('');
+  }
+}
+async function cswdoLoadCases() {
+  const {data,error} = await cswdoClient.from('cases')
+    .select('*')
+    .order('date_received',{ascending:false});
+  if (error) throw error;
+  const rows = data || [];
+  caseTeamByCase = {};
+  if (rows.length) {
+    const {data: teamRows, error: teamError} = await cswdoClient
+      .from('case_team_members').select('case_id, member_id');
+    if (teamError) throw teamError;
+    (teamRows || []).forEach(r => {
+      (caseTeamByCase[r.case_id] ||= []).push(r.member_id);
+    });
+  }
+  cases = rows.map(row => ({...cswdoToApp(row), coWorkerIds:caseTeamByCase[row.id]||[]}));
+  if (cswdoProfile?.role === 'social_worker') cases = cases.filter(c => cswdoIsProgramAllowed(c.program));
+  cswdoApplyProgramVisibility();
+  renderDashboard(); renderCases(); renderReports(); renderSchedule();
+}
+function cswdoIsProgramAllowed(program) {
+  if (!cswdoProfile || cswdoProfile.role !== 'social_worker') return true;
+  return cswdoAllowedPrograms.includes(String(program || '').toUpperCase());
+}
+function cswdoVisibleCases() {
+  return cswdoProfile?.role === 'social_worker'
+    ? cases.filter(c => cswdoIsProgramAllowed(c.program))
+    : cases;
+}
+function cswdoApplyProgramVisibility() {
+  if (!cswdoProfile) return;
+  const isWorker = cswdoProfile.role === 'social_worker';
+  const allowed = isWorker ? cswdoAllowedPrograms : ['CNSP','VAWC','CICL','CAR'];
+  document.querySelectorAll('[data-program]').forEach(btn => {
+    const visible = !isWorker || allowed.includes(String(btn.dataset.program || '').toUpperCase());
+    btn.hidden = !visible;
+    btn.style.display = visible ? '' : 'none';
+  });
+  ['filterProgram','caseProgram','programInput'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    [...el.options].forEach(o => {
+      if (!o.value || o.value === 'ALL') return;
+      const permitted = !isWorker || allowed.includes(String(o.value).toUpperCase());
+      o.hidden = !permitted;
+      o.disabled = !permitted;
+    });
+    if (isWorker && id !== 'programInput' && el.value !== 'ALL' && !allowed.includes(String(el.value).toUpperCase())) el.value = 'ALL';
+    if (isWorker && id === 'programInput') {
+      if (!allowed.includes(String(el.value).toUpperCase())) el.value = allowed[0] || '';
+      el.disabled = true;
+    }
+  });
+  ['CNSP','VAWC','CICL','CAR'].forEach(code => {
+    const stat = document.getElementById('stat' + code);
+    const card = stat?.closest('.card');
+    if (card) card.style.display = !isWorker || allowed.includes(code) ? '' : 'none';
+  });
+}
+function cswdoSetRoleUI() {
+  const role = cswdoProfile.role;
+  document.getElementById('signedInName').textContent = cswdoProfile.full_name || cswdoUser.email;
+  document.getElementById('signedInRole').textContent = role.replaceAll('_',' ').toUpperCase();
+  const adminOnly = role === 'admin';
+  document.getElementById('adminNavLabel').style.display = adminOnly ? '' : 'none';
+  document.getElementById('userRolesNav').style.display = adminOnly ? '' : 'none';
+  ['staffAccountsNav','activityLogsNav'].forEach(id=>document.getElementById(id).style.display=adminOnly?'':'none');
+  const canEncode = role === 'admin' || role === 'social_worker';
+  document.querySelectorAll('[data-page="encode"], #page-dashboard .pagehead button, #page-cases .pagehead button').forEach(el => el.style.display = canEncode ? '' : 'none');
+  cswdoApplyProgramVisibility();
+  const workerInput = document.getElementById('assignedWorkerSelect');
+  const activeWorkers = cswdoProfiles.filter(p => p.is_active && p.role === 'social_worker');
+  workerInput.innerHTML = '<option value="">Unassigned</option>' + activeWorkers.map(p =>
+    `<option value="${esc(p.full_name || '')}">${esc(p.full_name || 'Unnamed social worker')}</option>`
+  ).join('');
+  if (role === 'social_worker') {
+    workerInput.value = cswdoProfile.full_name || '';
+    workerInput.disabled = true;
+    workerInput.title = 'New cases are assigned to your own account.';
+  } else if (role === 'admin') {
+    workerInput.disabled = false;
+    workerInput.title = 'Choose an active social worker account.';
+  } else {
+    workerInput.disabled = true;
+  }
+}
+async function applyManagedDropdownOptions(){
+ if(!window.cswdoClient)return;const program=$('programInput')?.value||'';
+ const {data,error}=await cswdoClient.from('case_form_dropdown_options').select('*').eq('program',program).eq('is_active',true).order('sort_order');
+ if(error){console.warn('Managed dropdown options unavailable:',error.message);return;}
+ const rows=data||[];const byField=new Map();for(const row of rows){if(!byField.has(row.field_key))byField.set(row.field_key,[]);byField.get(row.field_key).push(row);}
+ for(const [key,opts] of byField){const el=document.querySelector(`#caseForm [name="${CSS.escape(key)}"]`);if(!el||el.tagName!=='SELECT')continue;const previous=el.value;const blank=el.querySelector('option[value=""]')?.outerHTML||'';el.innerHTML=blank+opts.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(previous&&[...el.options].some(o=>o.value===previous))el.value=previous;}
+ const typeRows=byField.get('caseType');if(typeRows){const current=$('caseTypeInput').value;const sel=$('caseTypeInput'),other=$('caseTypeOther');sel.innerHTML='<option value="">Select a concern</option>'+typeRows.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(current&&[...sel.options].some(o=>o.value===current))sel.value=current;other.style.display=sel.value==='Other (please specify)'?'block':'none';other.required=sel.value==='Other (please specify)';}
+}
+async function cswdoStartSession(session) {
+  cswdoUser = session.user;
+  const {data:profile,error} = await cswdoClient.from('profiles')
+    .select('id,full_name,role,is_active,username,email,primary_program').eq('id',cswdoUser.id).maybeSingle();
+  if (error) throw error;
+  if (!profile || !profile.is_active) {
+    await cswdoClient.auth.signOut();
+    throw new Error('Your account is not active yet. Please contact the CSWDO Records Administrator.');
+  }
+  cswdoProfile = profile;
+  cswdoAllowedPrograms = [];
+  if (profile.role === 'social_worker') {
+    const {data: assignments, error: assignmentError} = await cswdoClient.from('staff_program_assignments').select('program').eq('staff_id', profile.id);
+    if (assignmentError) throw new Error('Unable to load your authorized programs: ' + assignmentError.message);
+    cswdoAllowedPrograms = [...new Set((assignments || []).map(x => String(x.program || '').toUpperCase()).filter(x => ['CNSP','VAWC','CICL','CAR'].includes(x)))];
+    if (!cswdoAllowedPrograms.length) throw new Error('No program has been assigned to your account. Please contact the CSWDO Records Administrator.');
+  }
+  if (CSWDO_PORTAL === 'staff' && profile.role === 'admin') { window.location.replace('admin.html'); return; }
+  if (CSWDO_PORTAL === 'staff' && !['social_worker','cswd_officer'].includes(profile.role)) { await cswdoClient.auth.signOut(); throw new Error('This account is not authorized for the Staff Portal.'); }
+  await cswdoLoadProfiles();
+  await loadCustomFormFields();
+  await applyManagedDropdownOptions();
+  cswdoSetRoleUI();
+  toggleProgramFields();
+  await cswdoLoadCases();
+  document.getElementById('authGate').style.display = 'none';
+}
+async function cswdoLogin(event) {
+  event.preventDefault();
+  const button = document.getElementById('loginButton');
+  button.disabled = true; button.textContent = 'Signing in…'; cswdoMessage('');
+  try {
+    const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    const {data,error} = await cswdoClient.functions.invoke('username-login', {
+      body: { username, password }
+    });
+    if (error) throw new Error('Unable to sign in. Check your username and password, then try again.');
+    if (data?.error) throw new Error(data.error);
+    if (!data?.session?.access_token || !data?.session?.refresh_token) throw new Error('Login service returned an invalid session. Please contact the administrator.');
+    const {data:sessionData,error:sessionError} = await cswdoClient.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token
+    });
+    if (sessionError) throw sessionError;
+    await cswdoStartSession(sessionData.session);
+  } catch (e) { cswdoMessage(e.message || 'Unable to sign in.'); }
+  finally { button.disabled = false; button.textContent = 'Sign in securely'; }
+}
+document.getElementById('supabaseLoginForm').addEventListener('submit',cswdoLogin);
+document.getElementById('logoutButton').addEventListener('click',async()=>{
+  await cswdoClient.auth.signOut(); cswdoUser=null; cswdoProfile=null; cases=[];
+  document.getElementById('authGate').style.display='grid';
+  document.getElementById('loginPassword').value=''; document.getElementById('loginUsername').value='';
+});
+async function cswdoInitialize() {
+  try {
+    const {data:{session}} = await cswdoClient.auth.getSession();
+    if (session) await cswdoStartSession(session);
+  } catch(e) { cswdoMessage(e.message || 'Session verification failed.'); }
+}
+cswdoInitialize();
+
+function renderDashboard(){
+  if (!cswdoProfile) return;
+  let y=$('filterYear').value,p=$('filterProgram').value,q=$('filterQuarter').value;
+  let arr=cases.filter(c=>(!y||String(c.year)===String(y))&&(p==='ALL'||c.program===p)&&(q==='ALL'||String(quarter(c.dateReceived))===String(q)));
+  $('dashYear').textContent=y; $('statTotal').textContent=arr.length;
+  ['CNSP','VAWC','CICL','CAR'].forEach(k=>$('stat'+k).textContent=arr.filter(c=>c.program===k).length);
+  let qcounts=[1,2,3,4].map(n=>arr.filter(c=>quarter(c.dateReceived)===n).length),max=Math.max(1,...qcounts);
+  $('quarterBars').innerHTML=qcounts.map((v,i)=>`<div class="barrow"><span>${['1st','2nd','3rd','4th'][i]} Quarter</span><div class="track"><div class="fill" style="width:${v/max*100}%;background:${['#2476b9','#319b6c','#df8b31','#8a62bd'][i]}"></div></div><b>${v}</b></div>`).join('');
+  const statuses=['Open','Ongoing','For Follow-up','Referred','Resolved','Closed'];
+  const counts=statuses.map(s=>arr.filter(c=>c.status===s).length),mx=Math.max(1,...counts);
+  $('statusBars').innerHTML=statuses.map((s,i)=>`<div class="barrow"><span>${s}</span><div class="track"><div class="fill" style="width:${counts[i]/mx*100}%;background:${['#2476b9','#df8b31','#d8a43b','#8a62bd','#319b6c','#74869a'][i]}"></div></div><b>${counts[i]}</b></div>`).join('');
+  const colors=['#2476b9','#319b6c','#df8b31','#8a62bd','#d65b6b','#478f9b'];
+  const barHTML=(items,color)=>{let m=Math.max(1,...items.map(x=>x[1]));return items.length?items.map(([label,val],i)=>`<div class="barrow"><span>${esc(label)}</span><div class="track"><div class="fill" style="width:${val/m*100}%;background:${color[i%color.length]}"></div></div><b>${val}</b></div>`).join(''):`<div class="empty">No data for selected filters.</div>`};
+  $('sexBars').innerHTML=barHTML(['Female','Male','Intersex','Not recorded'].map(k=>[k,arr.filter(c=>String(c.sex||'').toLowerCase()===k.toLowerCase()).length]),colors);
+  $('programBars').innerHTML=barHTML(['CNSP','VAWC','CICL','CAR'].map(k=>[k,arr.filter(c=>c.program===k).length]),colors);
+  const groupBy=key=>{const m={};arr.forEach(c=>{let k=String(c[key]||'Unrecorded').trim()||'Unrecorded';m[k]=(m[k]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,10)};
+  $('barangayBars').innerHTML=barHTML(groupBy('barangay'),colors); $('concernBars').innerHTML=barHTML(groupBy('caseType'),colors);
+  const recent=[...arr].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))).slice(0,6);
+  $('recentRows').innerHTML=recent.length?recent.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No case records for this account.</td></tr>`;
+}
+function renderCases(){
+  if (!cswdoProfile) return;
+  fillCaseFilterOptions();
+  let q=($('caseSearch').value||'').toLowerCase().trim(),p=$('caseProgram').value,s=$('caseStatus').value,b=$('caseBarangay').value,w=$('caseWorker').value;
+  let arr=cases.filter(c=>(p==='ALL'||c.program===p)&&(s==='ALL'||c.status===s)&&(b==='ALL'||c.barangay===b)&&(w==='ALL'||String(c.worker||'').trim()===w)&&[c.id,c.folderNo,c.caseType,c.barangay,c.sex,c.clientCode,c.worker].some(v=>String(v||'').toLowerCase().includes(q)));
+  $('caseCount').textContent=`Showing ${arr.length} of ${cases.length} records`;
+  $('followupAlert').textContent='• Follow-up counts reflect records visible to your account';
+  $('caseRows').innerHTML=arr.length?arr.map(c=>`<tr><td>${esc(c.folderNo||'—')}</td><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.barangay||'—')}</td><td>${esc(c.sex||'—')}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td><td><button class="btn" onclick="viewCase('${esc(c.id)}')">View</button> ${cswdoProfile.role!=='cswd_officer'?`<button class="btn primary" onclick="editCase('${esc(c.id)}')">Edit</button>`:''} ${cswdoProfile.role==='admin'?`<button class="btn" onclick="deleteCase('${esc(c.id)}')">Delete</button>`:''}</td></tr>`).join(''):`<tr><td colspan="10" class="empty">No matching case records.</td></tr>`;
+}
+function renderReports(){
+  if (!cswdoProfile) return;
+  let y=$('reportYear').value,p=$('reportProgram').value,q=$('reportQuarter').value;
+  let arr=cases.filter(c=>String(c.year||'')===String(y)&&(p==='ALL'||c.program===p)&&(q==='ALL'||String(quarter(c.dateReceived))===String(q)));
+  const female=arr.filter(c=>String(c.sex||'').toLowerCase()==='female').length, male=arr.filter(c=>String(c.sex||'').toLowerCase()==='male').length;
+  $('reportTotal').textContent=arr.length;$('reportFemale').textContent=female;$('reportMale').textContent=male;$('reportOther').textContent=arr.length-female-male;
+  let qs=[1,2,3,4].filter(n=>q==='ALL'||String(n)===q),nt=0,ct=0;
+  $('reportQuarterRows').innerHTML=qs.map(n=>{let a=arr.filter(c=>quarter(c.dateReceived)===n),nn=a.filter(c=>c.classification==='New case').length,cc=a.filter(c=>c.classification==='Carry-over / continuing case').length;nt+=nn;ct+=cc;return `<tr><td>${['1st','2nd','3rd','4th'][n-1]}</td><td>${nn}</td><td>${cc}</td><td><b>${a.length}</b></td></tr>`}).join('');
+  $('reportNewTotal').textContent=nt;$('reportCarryTotal').textContent=ct;$('reportQuarterTotal').textContent=arr.length;
+  let ps=['CNSP','VAWC','CICL','CAR'].filter(k=>p==='ALL'||p===k),pt=0,ot=0,rt=0;
+  $('reportProgramRows').innerHTML=ps.map(k=>{let a=arr.filter(c=>c.program===k),o=a.filter(c=>['Open','Ongoing','For Follow-up','Referred'].includes(c.status)).length,r=a.filter(c=>['Resolved','Closed'].includes(c.status)).length;pt+=a.length;ot+=o;rt+=r;return `<tr><td>${k}</td><td>${a.length}</td><td>${o}</td><td>${r}</td></tr>`}).join('');
+  $('reportProgramTotal').textContent=pt;$('reportOngoingTotal').textContent=ot;$('reportClosedTotal').textContent=rt;
+  const cr={};arr.forEach(c=>{const k=(c.program||'Unspecified')+'||'+(c.caseType||'Not specified');cr[k]=(cr[k]||0)+1;});
+  $('reportClassificationRows').innerHTML=Object.entries(cr).map(([k,n])=>{const [a,b]=k.split('||');return `<tr><td>${esc(a)}</td><td>${esc(b)}</td><td>${n}</td></tr>`}).join('')||'<tr><td colspan="3">No encoded records.</td></tr>';
+  const br={};arr.forEach(c=>{const k=c.barangay||'Not specified';br[k]=(br[k]||0)+1;});
+  $('reportBarangayRows').innerHTML=Object.entries(br).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<tr><td>${esc(k)}</td><td>${n}</td></tr>`).join('')||'<tr><td colspan="2">No encoded records.</td></tr>';
+}
+async function cswdoSaveCase(event){
+  event.preventDefault(); event.stopImmediatePropagation();
+  if (!cswdoUser || !cswdoProfile) return alert('Please sign in first.');
+  if (cswdoProfile.role==='cswd_officer') return alert('CSWD Officer accounts have read-only case access.');
+  const form=$('caseForm'), d=Object.fromEntries(new FormData(form).entries());
+  if(d.caseType==='Other (please specify)'){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType)return alert('Please specify the other concern.');}
+  delete d.caseTypeOther;
+  const duplicate=cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===String(d.folderNo||'').trim().toLowerCase()&&c.id!==editingCaseId);
+  if(duplicate)return alert('A record with this Case Folder No. already exists in the records visible to you. The database will also enforce uniqueness.');
+  let assignedProfile=null;
+  if(cswdoProfile.role==='social_worker') assignedProfile=cswdoProfile;
+  else if(d.worker) assignedProfile=cswdoProfiles.find(p=>p.full_name===d.worker && p.role==='social_worker' && p.is_active);
+  if(cswdoProfile.role==='admin' && d.worker && d.worker!=='Unassigned' && !assignedProfile)
+    return alert('Select an active social worker account from the authorized staff list. Do not type an unverified name.');
+  const details=cswdoDetailsFromForm(d);
+  Object.entries(d).forEach(([k,v])=>{if(k.startsWith("custom_")&&v!=="")details[k]=v;});
+  const payload={
+    folder_no:d.folderNo.trim(), program:d.program, case_type:d.caseType,
+    date_received:d.dateReceived, date_opened:d.dateOpened||null,
+    classification:d.classification||'New case', status:cswdoDbStatus(d.status||'Open'),
+    client_code:d.clientCode||null, age:d.age?Number(d.age):null, sex:d.sex||null,
+    barangay:d.barangay||null, referral_source:d.referral||null,
+    assigned_to:assignedProfile?.id||null, created_by:cswdoUser.id,
+    program_details:details, legal_status:d.legalStatus||null,
+    intervention:d.intervention||null, notes:d.notes||null,
+    last_action:d.lastAction||null, next_followup:d.nextFollowup||null,
+    last_assessment:d.lastAssessment||null
+  };
+  try{
+    let result;
+    if(editingCaseId){
+      const old=cases.find(c=>c.id===editingCaseId);
+      if(!old)throw new Error('The selected record is no longer available.');
+      const updatePayload={...payload,created_by:undefined};
+      delete updatePayload.created_by;
+      result=await cswdoClient.from('cases').update(updatePayload).eq('id',old.dbId).select().single();
+    } else {
+      const y=String(d.dateReceived).slice(0,4);
+      payload.case_code=`${d.program}-${y}-${Date.now().toString().slice(-8)}`;
+      result=await cswdoClient.from('cases').insert(payload).select().single();
+    }
+    if(result.error)throw result.error;
+    const savedCaseId = result.data.id;
+    if (cswdoProfile.role==='admin') {
+      const selectedCoWorkers = [...document.getElementById('caseTeamSelect').selectedOptions]
+        .map(o=>o.value).filter(id=>id && id!==payload.assigned_to);
+      const {error: clearTeamError} = await cswdoClient.from('case_team_members')
+        .delete().eq('case_id',savedCaseId);
+      if (clearTeamError) throw clearTeamError;
+      if (selectedCoWorkers.length) {
+        const {error: addTeamError} = await cswdoClient.from('case_team_members').insert(
+          selectedCoWorkers.map(member_id=>({case_id:savedCaseId,member_id,added_by:cswdoUser.id}))
+        );
+        if (addTeamError) throw addTeamError;
+      }
+    }
+    const wasEdit=Boolean(editingCaseId);
+    editingCaseId=null;form.reset();$('dateReceived').value=today;toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();
+    $('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;
+    await cswdoLoadCases();
+    $('successTitle').textContent=wasEdit?'Case record updated successfully':'Case encoded successfully';
+    $('successMessage').textContent=`Case ID: ${result.data.case_code}. Opening Case Records…`;
+    $('successToast').hidden=false;
+    setTimeout(()=>{$('successToast').hidden=true;showPage('cases');},900);
+  }catch(err){alert('Unable to save case to Supabase: '+(err.message||'Unknown error'));}
+}
+$('caseForm').addEventListener('submit',cswdoSaveCase,true);
+async function deleteCase(caseCode){
+  if(cswdoProfile?.role!=='admin')return alert('Only the administrator can delete case records.');
+  const c=cases.find(x=>x.id===caseCode);if(!c)return;
+  if(!confirm('Permanently delete this case and its linked assessment, intervention, and follow-up records?'))return;
+  const {error}=await cswdoClient.from('cases').delete().eq('id',c.dbId);
+  if(error)return alert('Delete failed: '+error.message);
+  await cswdoLoadCases();
+}
+function editCase(caseCode){
+  const c=cases.find(x=>x.id===caseCode);if(!c)return;
+  if(cswdoProfile?.role==='cswd_officer')return alert('CSWD Officer access is read-only.');
+  if(cswdoProfile?.role==='social_worker' && c.worker!==cswdoProfile.full_name && !(c.coWorkerIds||[]).includes(cswdoUser.id))return alert('You can only edit cases assigned to you or shared with your case team.');
+  editingCaseId=caseCode;showPage('encode');
+  const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();updateCaseTypeOptions(c.caseType||'');
+  for(const [key,value] of Object.entries(c)){if(['caseType','id','dbId','year','createdAt','updatedAt'].includes(key))continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}
+  if(cswdoProfile.role==='social_worker')document.querySelector('[name="worker"]').value=cswdoProfile.full_name||'';
+  const teamSelect=document.getElementById('caseTeamSelect');
+  if(teamSelect){[...teamSelect.options].forEach(o=>o.selected=(c.coWorkerIds||[]).includes(o.value));}
+  toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});
+}
+async function viewCase(caseCode){
+  const c=cases.find(x=>x.id===caseCode);if(!c)return;
+  const msg=`Case ID: ${c.id}\nCASE FOLDER NO.: ${c.folderNo}\nProgram: ${c.program}\nCase type: ${c.caseType}\nDate received: ${c.dateReceived}\nStatus: ${c.status}\nBarangay: ${c.barangay||'—'}\nAssigned worker: ${c.worker||'—'}\nNext follow-up: ${c.nextFollowup||'—'}`;
+  alert(msg);
+}
+function renderSchedule(){
+  if(!cswdoProfile)return;
+  let arr=cases.filter(c=>c.nextFollowup).sort((a,b)=>a.nextFollowup.localeCompare(b.nextFollowup));
+  $('scheduleRows').innerHTML=arr.length?arr.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.nextFollowup)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No follow-ups scheduled for records visible to your account.</td></tr>`;
+}
+
+// ADMINISTRATION MODULES
+function openStaffForm(row=null){$('staffEditor').style.display='block';$('staffEditorTitle').textContent=row?'Edit Staff Profile':'Add Staff Profile';$('staffId').value=row?.id||'';$('staffName').value=row?.full_name||'';$('staffUsername').value=row?.username||'';$('staffEmail').value=row?.email||'';$('staffRole').value=row?.role||'social_worker';$('staffProgram').value=row?.primary_program||'';$('staffActive').value=String(row?.is_active??true);$('staffInitialPassword').value='';$('staffInitialPassword').required=!row;$('staffEditor').scrollIntoView({behavior:'smooth'});}
+function closeStaffForm(){$('staffEditor').style.display='none';$('staffForm').reset();}
+function renderStaffAccounts(){if(cswdoProfile?.role!=='admin')return;const q=($('staffSearch')?.value||'').toLowerCase(),r=$('staffRoleFilter')?.value||'ALL';const rows=cswdoProfiles.filter(x=>(r==='ALL'||x.role===r)&&(`${x.full_name||''} ${x.username||''} ${x.email||''}`).toLowerCase().includes(q));$('staffRows').innerHTML=rows.length?rows.map(x=>`<tr><td><b>${esc(x.full_name||'—')}</b></td><td>${esc(x.username||'—')}</td><td>${esc(x.email||'—')}</td><td>${esc(x.role||'—')}</td><td>${esc(x.primary_program||'All / —')}</td><td>${x.is_active?'<span class="pill green">Active</span>':'<span class="pill red">Inactive</span>'}</td><td><button class="btn" onclick="editStaffProfile('${x.id}')">Edit</button> <button class="btn" onclick="resetStaffPassword('${x.id}')">Reset password</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">No staff profiles found. Add or check profiles in Supabase.</td></tr>';}
+function editStaffProfile(id){const row=cswdoProfiles.find(x=>x.id===id);if(row)openStaffForm(row);}
+$('staffForm')?.addEventListener('submit',async e=>{e.preventDefault();if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');const id=$('staffId').value;const payload={full_name:$('staffName').value.trim(),username:$('staffUsername').value.trim().toLowerCase(),email:$('staffEmail').value.trim().toLowerCase(),role:$('staffRole').value,primary_program:$('staffProgram').value||null,is_active:$('staffActive').value==='true',updated_at:new Date().toISOString()};try{const action=id?'update':'create';const body={action,...payload,id,password:$('staffInitialPassword').value};const {data,error}=await cswdoClient.functions.invoke('admin-staff-account',{body});if(error)throw error;if(data?.error)throw new Error(data.error);await cswdoLoadProfiles();renderStaffAccounts();closeStaffForm();alert(data?.message||'Staff account saved.');}catch(err){alert('Unable to save staff profile: '+(err.message||err));}});
+async function resetStaffPassword(id){if(cswdoProfile?.role!=='admin')return alert('Administrator access only.');const pw=prompt('Enter a new temporary password (minimum 12 characters). The staff member must change it after signing in:');if(!pw)return;if(pw.length<12)return alert('Use at least 12 characters.');if(!confirm('Reset this staff member’s password now?'))return;try{const {data,error}=await cswdoClient.functions.invoke('admin-staff-account',{body:{action:'reset_password',id,password:pw}});if(error)throw error;if(data?.error)throw new Error(data.error);alert(data?.message||'Password reset successfully.');}catch(err){alert('Password reset failed: '+(err.message||err));}}
+async function renderActivityLogs(){if(cswdoProfile?.role!=='admin')return;try{const {data,error}=await cswdoClient.from('case_audit_logs').select('case_id,actor_id,action,changed_at').order('changed_at',{ascending:false}).limit(100);if(error)throw error;$('activityRows').innerHTML=(data||[]).length?(data||[]).map(x=>`<tr><td>${esc(new Date(x.changed_at).toLocaleString())}</td><td>${esc(cswdoProfiles.find(p=>p.id===x.actor_id)?.full_name||'System / unavailable')}</td><td>${esc(x.action)}</td><td>${esc(x.case_id||'—')}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">No audit entries available.</td></tr>';}catch(err){$('activityRows').innerHTML=`<tr><td colspan="4" class="empty">Unable to load audit logs: ${esc(err.message||err)}</td></tr>`;}}
+</script>
+</body></html>
