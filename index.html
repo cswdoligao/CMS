@@ -11,7 +11,7 @@
     <p style="margin:0 0 20px;color:#68788d;font-size:13px">Ligao City, Albay · Staff login</p>
     <form id="supabaseLoginForm">
       <label style="display:block;font-size:12px;font-weight:700;margin:0 0 6px">Username</label>
-      <input id="loginUsername" type="text" required autocomplete="username" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:13px">
+      <input id="loginUsername" type="text" required minlength="3" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Enter your username" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:13px">
       <label style="display:block;font-size:12px;font-weight:700;margin:0 0 6px">Password</label>
       <input id="loginPassword" type="password" required autocomplete="current-password" style="width:100%;padding:12px;border:1px solid #d2deeb;border-radius:8px;margin-bottom:15px">
       <button id="loginButton" type="submit" style="width:100%;padding:12px;border:0;border-radius:8px;background:#1769aa;color:white;font-weight:700;cursor:pointer">Sign in securely</button>
@@ -96,21 +96,13 @@
 </div></main></div>
 <script>
 const KEY='cswdo_case_demo_v2';let cases=JSON.parse(localStorage.getItem(KEY)||'[]');const $=id=>document.getElementById(id);const today=new Date().toISOString().slice(0,10);document.querySelector('[name="dateReceived"]').value=today;
-function toggleProgramFields(){const selected=$('programInput').value;document.querySelectorAll('.program-fields').forEach(el=>{const active=el.id==='fields-'+selected;el.hidden=!active;el.querySelectorAll('input,select,textarea').forEach(f=>f.disabled=!active)});}
+function toggleProgramFields(){const selected=$('programInput').value;const permitted=cswdoProfile?.role!=='social_worker'||cswdoAllowedPrograms.includes(selected);document.querySelectorAll('.program-fields').forEach(el=>{const active=permitted&&el.id==='fields-'+selected;el.hidden=!active;el.querySelectorAll('input,select,textarea').forEach(f=>f.disabled=!active)});const customCard=$('customCaseFieldsCard');if(customCard&& !permitted)customCard.style.display='none';}
 const caseTypeOptions={
  CNSP:['Physical abuse','Sexual abuse','Emotional / psychological abuse','Neglect','Abandonment','Exploitation','Trafficking','Child labor','Street situation / street-connected child','Online sexual abuse / exploitation','Child in armed conflict','Child with disability needing protection','Other (please specify)','For assessment / not yet classified'],
  VAWC:['Physical violence','Sexual violence','Psychological violence','Economic abuse','Multiple forms of violence','Other (please specify)','For assessment / not yet classified'],
  CICL:['Property-related alleged offense','Person-related alleged offense','Drug-related alleged offense','Cyber-related alleged offense','Other alleged offense (please specify)','Pending verification / classification'],
  CAR:['Risk of abuse or neglect','Neglect / inadequate care','Abandonment or risk of abandonment','Exploitation / child labor risk','Street situation / street-connected child','Family conflict or breakdown','School-related vulnerability','Exposure to violence or harmful environment','Trafficking / exploitation risk','Other (please specify)','For assessment / not yet classified']
 };
-async function applyManagedDropdownOptions(){
- if(!window.cswdoClient)return;const program=$('programInput')?.value||'';
- const {data,error}=await cswdoClient.from('case_form_dropdown_options').select('*').eq('program',program).eq('is_active',true).order('sort_order');
- if(error){console.warn('Managed dropdown options unavailable:',error.message);return;}
- const rows=data||[];const byField=new Map();for(const row of rows){if(!byField.has(row.field_key))byField.set(row.field_key,[]);byField.get(row.field_key).push(row);}
- for(const [key,opts] of byField){const el=document.querySelector(`#caseForm [name="${CSS.escape(key)}"]`);if(!el||el.tagName!=='SELECT')continue;const previous=el.value;const blank=el.querySelector('option[value=""]')?.outerHTML||'';el.innerHTML=blank+opts.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(previous&&[...el.options].some(o=>o.value===previous))el.value=previous;}
- const typeRows=byField.get('caseType');if(typeRows){const current=$('caseTypeInput').value;const sel=$('caseTypeInput'),other=$('caseTypeOther');sel.innerHTML='<option value="">Select a concern</option>'+typeRows.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(current&&[...sel.options].some(o=>o.value===current))sel.value=current;other.style.display=sel.value==='Other (please specify)'?'block':'none';other.required=sel.value==='Other (please specify)';}
-}
 function updateCaseTypeOptions(preserveValue=''){
  const program=$('programInput').value, sel=$('caseTypeInput'), other=$('caseTypeOther');
  const options=caseTypeOptions[program]||[];
@@ -120,24 +112,25 @@ function updateCaseTypeOptions(preserveValue=''){
  other.style.display=sel.value==='Other (please specify)'?'block':'none';
  other.required=sel.value==='Other (please specify)';
 }
-$('programInput').addEventListener('change',()=>{toggleProgramFields();renderCustomCaseFields();applyCoreFieldSettings();applyManagedDropdownOptions();});
+$('programInput').addEventListener('change',()=>{toggleProgramFields();renderCustomCaseFields();});
 toggleProgramFields();
 $('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
-$('programInput').addEventListener('change',()=>{updateCaseTypeOptions();applyManagedDropdownOptions();renderCustomCaseFields();applyCoreFieldSettings();});
+$('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();});
 updateCaseTypeOptions();
 
 function showPage(name){if(['user-roles','staff-accounts','activity-logs'].includes(name) && cswdoProfile?.role!=='admin'){alert('Administrator access only.');return;}document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$('page-'+name).classList.add('active');document.querySelectorAll('.nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));const titles={dashboard:'Case Management Dashboard',cases:'Case Records',encode:'Case Intake & Encoding',schedule:'Follow-ups & Hearings',reports:'Quarterly Reports',references:'DSWD Program References','user-roles':'User Roles & Permissions','staff-accounts':'Staff Accounts','activity-logs':'User Activity Logs'};$('topTitle').textContent=titles[name]||name;$('crumb').textContent=titles[name]||name;if(name==='dashboard')renderDashboard();if(name==='cases')renderCases();if(name==='schedule')renderSchedule();if(name==='reports')renderReports();if(name==='staff-accounts')renderStaffAccounts();if(name==='activity-logs')renderActivityLogs();}
-document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('[data-program]').forEach(b=>b.addEventListener('click',()=>{showPage('cases');$('caseProgram').value=b.dataset.program;renderCases()}));function save(){localStorage.setItem(KEY,JSON.stringify(cases))}function quarter(date){if(!date)return 1;return Math.floor(new Date(date+'T12:00:00').getMonth()/3)+1}function badge(s){let cls=['Resolved','Closed'].includes(s)?'green':['Urgent','Emergency'].includes(s)?'red':['For Follow-up','Ongoing'].includes(s)?'orange':s==='Referred'?'purple':'';return `<span class="pill ${cls}">${esc(s||'Open')}</span>`}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function filtered(year,program='ALL',q='ALL'){return cases.filter(c=>(!year||String(c.year)===String(year))&&(program==='ALL'||c.program===program)&&(q==='ALL'||String(quarter(c.dateReceived))===String(q)))}function renderDashboard(){let y=$('filterYear').value,p=$('filterProgram').value,q=$('filterQuarter').value;let arr=filtered(y,p,q);$('dashYear').textContent=y;$('statTotal').textContent=arr.length;['CNSP','VAWC','CICL','CAR'].forEach(k=>$('stat'+k).textContent=arr.filter(c=>c.program===k).length);let qcounts=[1,2,3,4].map(n=>arr.filter(c=>quarter(c.dateReceived)===n).length),max=Math.max(1,...qcounts);$('quarterBars').innerHTML=qcounts.map((v,i)=>`<div class="barrow"><span>${['1st','2nd','3rd','4th'][i]} Quarter</span><div class="track"><div class="fill" style="width:${v/max*100}%;background:${['#2476b9','#319b6c','#df8b31','#8a62bd'][i]}"></div></div><b>${v}</b></div>`).join('');let statuses=['Open','Ongoing','For Follow-up','Referred','Resolved','Closed'];let counts=statuses.map(s=>arr.filter(c=>c.status===s).length),mx=Math.max(1,...counts);$('statusBars').innerHTML=statuses.map((s,i)=>`<div class="barrow"><span>${s}</span><div class="track"><div class="fill" style="width:${counts[i]/mx*100}%;background:${['#2476b9','#df8b31','#d8a43b','#8a62bd','#319b6c','#74869a'][i]}"></div></div><b>${counts[i]}</b></div>`).join('');const barHTML=(items,color)=>{let max=Math.max(1,...items.map(x=>x[1]));return items.length?items.map(([label,val],i)=>`<div class="barrow"><span>${esc(label)}</span><div class="track"><div class="fill" style="width:${val/max*100}%;background:${color[i%color.length]}"></div></div><b>${val}</b></div>`).join(''):`<div class="empty">No data for selected filters.</div>`};const colors=['#2476b9','#319b6c','#df8b31','#8a62bd','#d65b6b','#478f9b'];$('sexBars').innerHTML=barHTML(['Female','Male','Other','Unrecorded'].map(k=>[k,arr.filter(c=>String(c.sex||'').toLowerCase()===k.toLowerCase()||(k==='Unrecorded'&&!c.sex)).length]),colors);$('programBars').innerHTML=barHTML(['CNSP','VAWC','CICL','CAR'].map(k=>[k,arr.filter(c=>c.program===k).length]),colors);const groupBy=key=>{const m={};arr.forEach(c=>{let k=String(c[key]||'Unrecorded').trim()||'Unrecorded';m[k]=(m[k]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,10)};$('barangayBars').innerHTML=barHTML(groupBy('barangay'),colors);$('concernBars').innerHTML=barHTML(groupBy('caseType'),colors);let recent=[...arr].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,6);$('recentRows').innerHTML=recent.length?recent.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No case records for this filter. Use “Encode New Case” to add a record.</td></tr>`}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('[data-program]').forEach(b=>b.addEventListener('click',()=>{if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(b.dataset.program))return;showPage('cases');$('caseProgram').value=b.dataset.program;renderCases()}));function save(){localStorage.setItem(KEY,JSON.stringify(cases))}function quarter(date){if(!date)return 1;return Math.floor(new Date(date+'T12:00:00').getMonth()/3)+1}function badge(s){let cls=['Resolved','Closed'].includes(s)?'green':['Urgent','Emergency'].includes(s)?'red':['For Follow-up','Ongoing'].includes(s)?'orange':s==='Referred'?'purple':'';return `<span class="pill ${cls}">${esc(s||'Open')}</span>`}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function filtered(year,program='ALL',q='ALL'){return cases.filter(c=>(!year||String(c.year)===String(year))&&(program==='ALL'||c.program===program)&&(q==='ALL'||String(quarter(c.dateReceived))===String(q)))}function renderDashboard(){let y=$('filterYear').value,p=$('filterProgram').value,q=$('filterQuarter').value;let arr=filtered(y,p,q);$('dashYear').textContent=y;$('statTotal').textContent=arr.length;['CNSP','VAWC','CICL','CAR'].forEach(k=>$('stat'+k).textContent=arr.filter(c=>c.program===k).length);let qcounts=[1,2,3,4].map(n=>arr.filter(c=>quarter(c.dateReceived)===n).length),max=Math.max(1,...qcounts);$('quarterBars').innerHTML=qcounts.map((v,i)=>`<div class="barrow"><span>${['1st','2nd','3rd','4th'][i]} Quarter</span><div class="track"><div class="fill" style="width:${v/max*100}%;background:${['#2476b9','#319b6c','#df8b31','#8a62bd'][i]}"></div></div><b>${v}</b></div>`).join('');let statuses=['Open','Ongoing','For Follow-up','Referred','Resolved','Closed'];let counts=statuses.map(s=>arr.filter(c=>c.status===s).length),mx=Math.max(1,...counts);$('statusBars').innerHTML=statuses.map((s,i)=>`<div class="barrow"><span>${s}</span><div class="track"><div class="fill" style="width:${counts[i]/mx*100}%;background:${['#2476b9','#df8b31','#d8a43b','#8a62bd','#319b6c','#74869a'][i]}"></div></div><b>${counts[i]}</b></div>`).join('');const barHTML=(items,color)=>{let max=Math.max(1,...items.map(x=>x[1]));return items.length?items.map(([label,val],i)=>`<div class="barrow"><span>${esc(label)}</span><div class="track"><div class="fill" style="width:${val/max*100}%;background:${color[i%color.length]}"></div></div><b>${val}</b></div>`).join(''):`<div class="empty">No data for selected filters.</div>`};const colors=['#2476b9','#319b6c','#df8b31','#8a62bd','#d65b6b','#478f9b'];$('sexBars').innerHTML=barHTML(['Female','Male','Other','Unrecorded'].map(k=>[k,arr.filter(c=>String(c.sex||'').toLowerCase()===k.toLowerCase()||(k==='Unrecorded'&&!c.sex)).length]),colors);const dashboardPrograms = cswdoProfile?.role === 'social_worker' ? cswdoAllowedPrograms : ['CNSP','VAWC','CICL','CAR'];
+  $('programBars').innerHTML=barHTML(dashboardPrograms.map(k=>[k,arr.filter(c=>c.program===k).length]),colors);const groupBy=key=>{const m={};arr.forEach(c=>{let k=String(c[key]||'Unrecorded').trim()||'Unrecorded';m[k]=(m[k]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,10)};$('barangayBars').innerHTML=barHTML(groupBy('barangay'),colors);$('concernBars').innerHTML=barHTML(groupBy('caseType'),colors);let recent=[...arr].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,6);$('recentRows').innerHTML=recent.length?recent.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No case records for this filter. Use “Encode New Case” to add a record.</td></tr>`}
 const ligaoBarangays=['Allang','Amtic','Bacong','Bagumbayan','Balaogan','Baligang',' Barayong','Batang','Bay','Binanowan','Binatagan','Bonga','Busac','Busay','Cabarian','Cagbacong','Calzada','Catburawan','Cotmon','Dunao','Francia','Guilid','Herrera','Layon','Ligu','Mahayag','Maonon','Nasisi','Ninoy Aquino','Pandan','Paulba','Pinit','Rangas','Rawis','Rizal','Sagumay','Santa Cruz','Tambo','Tandarora','Tula-tula Grande','Tula-tula Pequeño','Tupas','Tuburan','Tinampo','Tomolin','Tuburan','Tula-tula','Tiongson','San Vicente','San Isidro','San Jose','San Roque','Sta. Maria','Sta. Cruz','Danao'];
 function fillCaseFilterOptions(){const b=$('caseBarangay'),w=$('caseWorker');const currentB=b.value,currentW=w.value;const known=[...new Set([...ligaoBarangays.map(x=>x.trim()),...cases.map(c=>c.barangay).filter(Boolean)])].sort((a,b)=>a.localeCompare(b));b.innerHTML='<option value="ALL">All barangays</option>'+known.map(x=>`<option>${esc(x)}</option>`).join('');if([...b.options].some(o=>o.value===currentB))b.value=currentB;const workers=[...new Set(cases.map(c=>String(c.worker||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));w.innerHTML='<option value="ALL">All social workers</option>'+workers.map(x=>`<option>${esc(x)}</option>`).join('');if([...w.options].some(o=>o.value===currentW))w.value=currentW;}
 function resetCaseFilters(){['caseSearch'].forEach(id=>$(id).value='');['caseProgram','caseBarangay','caseWorker','caseStatus'].forEach(id=>$(id).value='ALL');renderCases()}
 function renderCases(){fillCaseFilterOptions();let q=($('caseSearch').value||'').toLowerCase().trim(),p=$('caseProgram').value,s=$('caseStatus').value,b=$('caseBarangay').value,w=$('caseWorker').value;let arr=cases.filter(c=>(p==='ALL'||c.program===p)&&(s==='ALL'||c.status===s)&&(b==='ALL'||c.barangay===b)&&(w==='ALL'||String(c.worker||'').trim()===w)&&[c.id,c.folderNo,c.caseType,c.barangay,c.sex,c.clientCode,c.worker].some(v=>String(v||'').toLowerCase().includes(q)));$('caseCount').textContent=`Showing ${arr.length} of ${cases.length} records` ;const todayLocal=new Date();todayLocal.setHours(0,0,0,0);const overdue=cases.filter(c=>c.nextFollowup&&new Date(c.nextFollowup+'T00:00:00')<todayLocal&&!['Closed','Resolved'].includes(c.status));$('followupAlert').textContent=overdue.length?`• ${overdue.length} overdue follow-up${overdue.length===1?'':'s'} across all records`: '• No overdue follow-ups across saved records';$('caseRows').innerHTML=arr.length?arr.map(c=>`<tr><td>${esc(c.folderNo||'—')}</td><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.dateReceived)}</td><td>${esc(c.barangay||'—')}</td><td>${esc(c.sex||'—')}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td><td><button class="btn" onclick="viewCase('${esc(c.id)}')">View</button> <button class="btn primary" onclick="editCase('${esc(c.id)}')">Edit</button> <button class="btn" onclick="deleteCase('${esc(c.id)}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="10" class="empty">No matching case records.</td></tr>`}
 function viewCase(id){let c=cases.find(x=>x.id===id);if(!c)return;let msg=`Case ID: ${c.id}\nCASE FOLDER NO.: ${c.folderNo||'—'}\nProgram: ${c.program}\nCase type: ${c.caseType}\nClient code: ${c.clientCode}\nDate received: ${c.dateReceived}\nDate opened: ${c.dateOpened||'—'}\nLast assessment: ${c.lastAssessment||'—'}\nStatus: ${c.status}\nClassification: ${c.classification}\nBarangay: ${c.barangay||'—'}\nSex: ${c.sex||'—'}\nAssigned worker: ${c.worker||'—'}\nNext follow-up: ${c.nextFollowup||'—'}\nLegal status: ${c.legalStatus}\nIntervention: ${c.intervention||'—'}\nNotes: ${c.notes||'—'}`;alert(msg)}function deleteCase(id){if(confirm('Delete this demo case record? This cannot be undone.')){cases=cases.filter(c=>c.id!==id);save();renderCases();renderDashboard();renderReports()}}
 let editingCaseId=null;
-function editCase(id){const c=cases.find(x=>x.id===id);if(!c)return;editingCaseId=id;showPage('encode');const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();renderCustomCaseFields(c.programDetails||{});updateCaseTypeOptions(c.caseType||'');for(const [key,value] of Object.entries(c)){if(key==='caseType')continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});}
+function editCase(id){const c=cases.find(x=>x.id===id);if(!c)return;editingCaseId=id;showPage('encode');const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();renderCustomCaseFields(c);updateCaseTypeOptions(c.caseType||'');for(const [key,value] of Object.entries(c)){if(key==='caseType')continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});}
 function cancelEdit(){editingCaseId=null;$('caseForm').reset();$('dateReceived').value=today;toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}
 $('caseForm').addEventListener('reset',()=>setTimeout(()=>{if(editingCaseId){editingCaseId=null;$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}$('dateReceived').value=today;toggleProgramFields()},0));
-$('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target).entries());if(d.caseType==='Other (please specify)'){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType){alert('Please specify the other case type / concern.');return;}}delete d.caseTypeOther;const folder=(d.folderNo||'').trim().toLowerCase();if(cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===folder&&c.id!==editingCaseId)){alert('A record with this Case Folder No. already exists. Please check the number before saving.');return;}let c;if(editingCaseId){const old=cases.find(x=>x.id===editingCaseId);if(!old)return;c={...old,...d,year:Number((d.dateReceived||today).slice(0,4)),updatedAt:new Date().toISOString()};cases=cases.map(x=>x.id===editingCaseId?c:x);}else{let y=(d.dateReceived||today).slice(0,4),n=String(cases.filter(x=>x.program===d.program&&x.year===Number(y)).length+1).padStart(4,'0');c={...d,year:Number(y),id:`${d.program}-${y}-${n}`,createdAt:new Date().toISOString()};cases.push(c);}save();const savedId=c.id;editingCaseId=null;e.target.reset();$('dateReceived').value=today;updateCaseTypeOptions();toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;const wasUpdated=Boolean(c.updatedAt);$('successTitle').textContent=wasUpdated?'Case record updated successfully':'Case encoded successfully';$('successMessage').textContent=`Case ID: ${savedId}. Opening Case Records…`;$('successToast').hidden=false;setTimeout(()=>{showPage('cases');$('caseProgram').value='ALL';renderCases();$('successToast').hidden=true;},1100)});function renderSchedule(){let arr=cases.filter(c=>c.nextFollowup).sort((a,b)=>a.nextFollowup.localeCompare(b.nextFollowup));$('scheduleRows').innerHTML=arr.length?arr.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.nextFollowup)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No follow-ups scheduled. Add a next follow-up date when encoding a case.</td></tr>`}
+$('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target).entries());if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(d.program)){alert('You are not authorized to encode cases under this program.');return;}if(d.caseType==='Other (please specify)'){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType){alert('Please specify the other case type / concern.');return;}}delete d.caseTypeOther;const folder=(d.folderNo||'').trim().toLowerCase();if(cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===folder&&c.id!==editingCaseId)){alert('A record with this Case Folder No. already exists. Please check the number before saving.');return;}let c;if(editingCaseId){const old=cases.find(x=>x.id===editingCaseId);if(!old)return;c={...old,...d,year:Number((d.dateReceived||today).slice(0,4)),updatedAt:new Date().toISOString()};cases=cases.map(x=>x.id===editingCaseId?c:x);}else{let y=(d.dateReceived||today).slice(0,4),n=String(cases.filter(x=>x.program===d.program&&x.year===Number(y)).length+1).padStart(4,'0');c={...d,year:Number(y),id:`${d.program}-${y}-${n}`,createdAt:new Date().toISOString()};cases.push(c);}save();const savedId=c.id;editingCaseId=null;e.target.reset();$('dateReceived').value=today;updateCaseTypeOptions();toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;const wasUpdated=Boolean(c.updatedAt);$('successTitle').textContent=wasUpdated?'Case record updated successfully':'Case encoded successfully';$('successMessage').textContent=`Case ID: ${savedId}. Opening Case Records…`;$('successToast').hidden=false;setTimeout(()=>{showPage('cases');$('caseProgram').value='ALL';renderCases();$('successToast').hidden=true;},1100)});function renderSchedule(){let arr=cases.filter(c=>c.nextFollowup).sort((a,b)=>a.nextFollowup.localeCompare(b.nextFollowup));$('scheduleRows').innerHTML=arr.length?arr.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.nextFollowup)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No follow-ups scheduled. Add a next follow-up date when encoding a case.</td></tr>`}
 function safeReportText(v){return String(v??'').replace(/[&<>\"']/g, ch => ch==='&'?'&amp;':ch==='<'?'&lt;':ch==='>'?'&gt;':ch==='\"'?'&quot;':'&#39;');}
 function renderReports(){
 let y=$('reportYear').value,p=$('reportProgram').value,q=$('reportQuarter').value;
@@ -177,6 +170,7 @@ const CSWDO_SUPABASE_URL = 'https://zjbneacjyfhrczgbhwzt.supabase.co';
 const CSWDO_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_QywjU6McljGl7_hPWHz-6Q_I9Qa_3eQ';
 const cswdoClient = window.supabase.createClient(CSWDO_SUPABASE_URL, CSWDO_SUPABASE_PUBLISHABLE_KEY);
 let cswdoUser = null, cswdoProfile = null, cswdoProfiles = [];
+let cswdoAllowedPrograms = []; // Loaded from staff_program_assignments for the signed-in worker
 let cswdoLoading = false;
 
 function cswdoMessage(msg, isError=true) {
@@ -230,6 +224,7 @@ async function loadCustomFormFields(){
 }
 function renderCustomCaseFields(saved={}){
   const program=document.getElementById('programInput')?.value;
+  if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(program)){const w=document.getElementById('customCaseFields');const c=document.getElementById('customCaseFieldsCard');if(w)w.innerHTML='';if(c)c.style.display='none';return;}
   const wrap=document.getElementById('customCaseFields'); const card=document.getElementById('customCaseFieldsCard');
   if(!wrap||!card)return;
   const fields=cswdoCustomFields.filter(f=>f.program===program);
@@ -279,22 +274,6 @@ document.getElementById('formFieldForm')?.addEventListener('submit',async e=>{
  document.getElementById('formFieldEditor').style.display='none';await loadFormManagement();await loadCustomFormFields();alert('Form question saved. It will appear on new case entries.');
 });
 
-let coreFieldSettings = [];
-async function applyCoreFieldSettings(){
- const {data,error}=await cswdoClient.from('case_form_field_settings').select('*');
- if(error){console.warn('Built-in form settings unavailable:',error.message);return;}
- coreFieldSettings=data||[];
- const program=document.getElementById('programInput')?.value||'';
- for(const cfg of coreFieldSettings.filter(x=>x.program==='ALL'||x.program===program)){
-  const el=document.querySelector(`#caseForm [name="${CSS.escape(cfg.field_key)}"]`);if(!el)continue;
-  const wrap=el.closest('.field');if(!wrap)continue;const label=wrap.querySelector('label');
-  if(label&&cfg.label)label.textContent=cfg.label+(cfg.is_required?' *':'');
-  if(cfg.is_required!==null&&cfg.is_required!==undefined)el.required=!!cfg.is_required;
-  wrap.hidden=cfg.is_active===false;el.disabled=cfg.is_active===false;
-  let help=wrap.querySelector('[data-form-help]');if(cfg.help_text){if(!help){help=document.createElement('small');help.className='muted';help.dataset.formHelp='1';wrap.appendChild(help);}help.textContent=cfg.help_text;}else if(help)help.remove();
- }
-}
-
 function cswdoDetailsFromForm(d) {
   const main = new Set([
     'program','folderNo','caseType','dateReceived','dateOpened','classification','status',
@@ -334,7 +313,48 @@ async function cswdoLoadCases() {
     });
   }
   cases = rows.map(row => ({...cswdoToApp(row), coWorkerIds:caseTeamByCase[row.id]||[]}));
+  if (cswdoProfile?.role === 'social_worker') cases = cases.filter(c => cswdoIsProgramAllowed(c.program));
+  cswdoApplyProgramVisibility();
   renderDashboard(); renderCases(); renderReports(); renderSchedule();
+}
+function cswdoIsProgramAllowed(program) {
+  if (!cswdoProfile || cswdoProfile.role !== 'social_worker') return true;
+  return cswdoAllowedPrograms.includes(String(program || '').toUpperCase());
+}
+function cswdoVisibleCases() {
+  return cswdoProfile?.role === 'social_worker'
+    ? cases.filter(c => cswdoIsProgramAllowed(c.program))
+    : cases;
+}
+function cswdoApplyProgramVisibility() {
+  if (!cswdoProfile) return;
+  const isWorker = cswdoProfile.role === 'social_worker';
+  const allowed = isWorker ? cswdoAllowedPrograms : ['CNSP','VAWC','CICL','CAR'];
+  document.querySelectorAll('[data-program]').forEach(btn => {
+    const visible = !isWorker || allowed.includes(String(btn.dataset.program || '').toUpperCase());
+    btn.hidden = !visible;
+    btn.style.display = visible ? '' : 'none';
+  });
+  ['filterProgram','caseProgram','programInput'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    [...el.options].forEach(o => {
+      if (!o.value || o.value === 'ALL') return;
+      const permitted = !isWorker || allowed.includes(String(o.value).toUpperCase());
+      o.hidden = !permitted;
+      o.disabled = !permitted;
+    });
+    if (isWorker && id !== 'programInput' && el.value !== 'ALL' && !allowed.includes(String(el.value).toUpperCase())) el.value = 'ALL';
+    if (isWorker && id === 'programInput') {
+      if (!allowed.includes(String(el.value).toUpperCase())) el.value = allowed[0] || '';
+      el.disabled = true;
+    }
+  });
+  ['CNSP','VAWC','CICL','CAR'].forEach(code => {
+    const stat = document.getElementById('stat' + code);
+    const card = stat?.closest('.card');
+    if (card) card.style.display = !isWorker || allowed.includes(code) ? '' : 'none';
+  });
 }
 function cswdoSetRoleUI() {
   const role = cswdoProfile.role;
@@ -346,6 +366,7 @@ function cswdoSetRoleUI() {
   ['staffAccountsNav','activityLogsNav'].forEach(id=>document.getElementById(id).style.display=adminOnly?'':'none');
   const canEncode = role === 'admin' || role === 'social_worker';
   document.querySelectorAll('[data-page="encode"], #page-dashboard .pagehead button, #page-cases .pagehead button').forEach(el => el.style.display = canEncode ? '' : 'none');
+  cswdoApplyProgramVisibility();
   const workerInput = document.getElementById('assignedWorkerSelect');
   const activeWorkers = cswdoProfiles.filter(p => p.is_active && p.role === 'social_worker');
   workerInput.innerHTML = '<option value="">Unassigned</option>' + activeWorkers.map(p =>
@@ -362,6 +383,14 @@ function cswdoSetRoleUI() {
     workerInput.disabled = true;
   }
 }
+async function applyManagedDropdownOptions(){
+ if(!window.cswdoClient)return;const program=$('programInput')?.value||'';
+ const {data,error}=await cswdoClient.from('case_form_dropdown_options').select('*').eq('program',program).eq('is_active',true).order('sort_order');
+ if(error){console.warn('Managed dropdown options unavailable:',error.message);return;}
+ const rows=data||[];const byField=new Map();for(const row of rows){if(!byField.has(row.field_key))byField.set(row.field_key,[]);byField.get(row.field_key).push(row);}
+ for(const [key,opts] of byField){const el=document.querySelector(`#caseForm [name="${CSS.escape(key)}"]`);if(!el||el.tagName!=='SELECT')continue;const previous=el.value;const blank=el.querySelector('option[value=""]')?.outerHTML||'';el.innerHTML=blank+opts.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(previous&&[...el.options].some(o=>o.value===previous))el.value=previous;}
+ const typeRows=byField.get('caseType');if(typeRows){const current=$('caseTypeInput').value;const sel=$('caseTypeInput'),other=$('caseTypeOther');sel.innerHTML='<option value="">Select a concern</option>'+typeRows.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(current&&[...sel.options].some(o=>o.value===current))sel.value=current;other.style.display=sel.value==='Other (please specify)'?'block':'none';other.required=sel.value==='Other (please specify)';}
+}
 async function cswdoStartSession(session) {
   cswdoUser = session.user;
   const {data:profile,error} = await cswdoClient.from('profiles')
@@ -372,11 +401,17 @@ async function cswdoStartSession(session) {
     throw new Error('Your account is not active yet. Please contact the CSWDO Records Administrator.');
   }
   cswdoProfile = profile;
+  cswdoAllowedPrograms = [];
+  if (profile.role === 'social_worker') {
+    const {data: assignments, error: assignmentError} = await cswdoClient.from('staff_program_assignments').select('program').eq('staff_id', profile.id);
+    if (assignmentError) throw new Error('Unable to load your authorized programs: ' + assignmentError.message);
+    cswdoAllowedPrograms = [...new Set((assignments || []).map(x => String(x.program || '').toUpperCase()).filter(x => ['CNSP','VAWC','CICL','CAR'].includes(x)))];
+    if (!cswdoAllowedPrograms.length) throw new Error('No program has been assigned to your account. Please contact the CSWDO Records Administrator.');
+  }
   if (CSWDO_PORTAL === 'staff' && profile.role === 'admin') { window.location.replace('admin.html'); return; }
   if (CSWDO_PORTAL === 'staff' && !['social_worker','cswd_officer'].includes(profile.role)) { await cswdoClient.auth.signOut(); throw new Error('This account is not authorized for the Staff Portal.'); }
   await cswdoLoadProfiles();
   await loadCustomFormFields();
-  await applyCoreFieldSettings();
   await applyManagedDropdownOptions();
   cswdoSetRoleUI();
   await cswdoLoadCases();
@@ -387,15 +422,20 @@ async function cswdoLogin(event) {
   const button = document.getElementById('loginButton');
   button.disabled = true; button.textContent = 'Signing in…'; cswdoMessage('');
   try {
-    const {data,error} = await cswdoClient.functions.invoke('username-login', { body: {
-      username: document.getElementById('loginUsername').value.trim().toLowerCase(),
-      password: document.getElementById('loginPassword').value
-    }});
-    if (error) throw error;
-    if (data?.error || !data?.session) throw new Error(data?.error || 'Invalid username or password.');
-    const {error:sessionError} = await cswdoClient.auth.setSession(data.session);
+    const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    const {data,error} = await cswdoClient.functions.invoke('username-login', {
+      body: { username, password }
+    });
+    if (error) throw new Error('Unable to sign in. Check your username and password, then try again.');
+    if (data?.error) throw new Error(data.error);
+    if (!data?.session?.access_token || !data?.session?.refresh_token) throw new Error('Login service returned an invalid session. Please contact the administrator.');
+    const {data:sessionData,error:sessionError} = await cswdoClient.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token
+    });
     if (sessionError) throw sessionError;
-    await cswdoStartSession(data.session);
+    await cswdoStartSession(sessionData.session);
   } catch (e) { cswdoMessage(e.message || 'Unable to sign in.'); }
   finally { button.disabled = false; button.textContent = 'Sign in securely'; }
 }
@@ -403,7 +443,7 @@ document.getElementById('supabaseLoginForm').addEventListener('submit',cswdoLogi
 document.getElementById('logoutButton').addEventListener('click',async()=>{
   await cswdoClient.auth.signOut(); cswdoUser=null; cswdoProfile=null; cases=[];
   document.getElementById('authGate').style.display='grid';
-  document.getElementById('loginPassword').value='';
+  document.getElementById('loginPassword').value=''; document.getElementById('loginUsername').value='';
 });
 async function cswdoInitialize() {
   try {
@@ -516,7 +556,7 @@ async function cswdoSaveCase(event){
       }
     }
     const wasEdit=Boolean(editingCaseId);
-    editingCaseId=null;form.reset();$('dateReceived').value=today;toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();applyCoreFieldSettings();applyManagedDropdownOptions();
+    editingCaseId=null;form.reset();$('dateReceived').value=today;toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();
     $('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;
     await cswdoLoadCases();
     $('successTitle').textContent=wasEdit?'Case record updated successfully':'Case encoded successfully';
