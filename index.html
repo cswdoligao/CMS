@@ -25,7 +25,7 @@
 <section class="page" id="page-cases"><div class="pagehead"><div><h2>Case Records</h2><p>Search and manage program case records.</p></div><button class="btn primary" onclick="showPage('encode')">＋ New Case</button></div><div class="filters"><input class="input" style="max-width:320px" id="caseSearch" placeholder="Search case folder no., case ID, client code, concern…" oninput="renderCases()"><select id="caseProgram" onchange="renderCases()"><option value="ALL">All programs</option><option>CNSP</option><option>VAWC</option><option>CICL</option><option>CAR</option></select><select id="caseBarangay" onchange="renderCases()"><option value="ALL">All barangays</option></select><select id="caseWorker" onchange="renderCases()"><option value="ALL">All social workers</option></select><select id="caseStatus" onchange="renderCases()"><option value="ALL">All statuses</option><option>Open</option><option>Under Assessment</option><option>Ongoing</option><option>Ongoing Intervention</option><option>For Follow-up</option><option>Referred</option><option>Resolved</option><option>Closed</option></select><button class="btn" onclick="resetCaseFilters()">Reset filters</button></div><div class="filters" style="align-items:center"><span class="muted" id="caseCount">0 records</span><span class="muted" id="followupAlert"></span></div><div class="tablewrap"><table><thead><tr><th>Case Folder No.</th><th>Case ID</th><th>Program</th><th>Case Type</th><th>Received</th><th>Barangay</th><th>Sex</th><th>Social Worker</th><th>Status</th><th></th></tr></thead><tbody id="caseRows"></tbody></table></div></section>
 <section class="page" id="page-encode"><div class="pagehead"><div><h2>Case Intake & Encoding</h2><p>Record a new case or update case management information.</p></div><span class="pill">Confidential record</span></div><div class="notice">Secure access: Case records are stored in the CSWDO Supabase database. Only encode fictional test records until account permissions, document security, backups, and operational safeguards have been fully tested.</div><form id="caseForm"><div class="card"><div class="formgrid"><div class="section-title">A. Case Identification</div><div class="field"><label>Program *</label><select name="program" id="programInput" required><option value="CNSP">CNSP — Children in Need of Special Protection</option><option value="VAWC">VAWC — Violence Against Women and their Children</option><option value="CICL">CICL — Children in Conflict with the Law</option><option value="CAR">CAR — Children at Risk</option></select></div><div class="field"><label>CASE FOLDER NO. *</label><input name="folderNo" required placeholder="e.g., CNSP-2026-001"></div><div class="field"><label>Case type / concern *</label><select name="caseType" id="caseTypeInput" required><option value="">Select a concern</option></select><input name="caseTypeOther" id="caseTypeOther" class="input" style="margin-top:8px;display:none" placeholder="Specify other concern" aria-label="Specify other concern"></div><div class="field"><label>Date received *</label><input type="date" name="dateReceived" id="dateReceived" required></div><div class="field"><label>Date case opened</label><input type="date" name="dateOpened"></div><div class="field"><label>Case classification</label><select name="classification"><option>New case</option><option>Carry-over / continuing case</option><option>Reopened case</option><option>Referral received</option></select></div><div class="field"><label>Case status *</label><select name="status" required><option>Open</option><option>Ongoing</option><option>For Follow-up</option><option>Referred</option><option>Resolved</option><option>Closed</option></select></div><div class="field"><label>Priority</label><select name="priority"><option>Routine</option><option>Priority</option><option>Urgent</option><option>Emergency</option></select></div><div class="section-title">B. Client & Referral (use internal identifiers in demo)</div><div class="field"><label>Client code / case reference *</label><input name="clientCode" required placeholder="e.g., CNSP-2026-0001"></div><div class="field"><label>Age at intake</label><input name="age" type="number" min="0" max="120" placeholder="Age"></div><div class="field"><label>Sex *</label><select name="sex" required><option value="">Select sex</option><option>Female</option><option>Male</option><option>Intersex</option><option>Not recorded</option></select></div><div class="field"><label>Barangay *</label><select name="barangay" required><option value="">Select barangay</option><option>Abella</option><option>Allang</option><option>Amtic</option><option>Bacong</option><option>Bagumbayan</option><option>Balanac</option><option>Baligang</option><option>Barayong</option><option>Basag</option><option>Batang</option><option>Bay</option><option>Binanowan</option><option>Binatagan</option><option>Bobonsuran</option><option>Bonga</option><option>Busac</option><option>Busay</option><option>Cabarian</option><option>Calzada</option><option>Catburawan</option><option>Cavasi</option><option>Culliat</option><option>Dunao</option><option>Francia</option><option>Guilid</option><option>Herrera</option><option>Layon</option><option>Macalidong</option><option>Mahaba</option><option>Malama</option><option>Maonon</option><option>Nabonton</option><option>Nasisi</option><option>Oma-oma</option><option>Palapas</option><option>Pandan</option><option>Paulba</option><option>Paulog</option><option>Pinamaniquian</option><option>Pinit</option><option>Ranao-ranao</option><option>San Vicente</option><option>Santa Cruz</option><option>Tagpo</option><option>Tambo</option><option>Tandarura</option><option>Tastas</option><option>Tinago</option><option>Tinampo</option><option>Tiongson</option><option>Tomolin</option><option>Tuburan</option><option>Tula-tula Grande</option><option>Tula-tula Pequeño</option><option>Tupaz</option></select></div><div class="field"><label>Referral source</label><select name="referral"><option>Walk-in</option><option>Barangay / BPC</option><option>PNP</option><option>School</option><option>Hospital / health center</option><option>DSWD</option><option>City / other LGU office</option><option>Court / prosecutor</option><option>Other</option></select></div><div class="field"><label>Assigned social worker</label><select name="worker" id="assignedWorkerSelect"><option value="">Unassigned</option></select><small class="muted">Select the primary accountable social worker.</small></div><div class="field"><label>Additional case team members</label><select name="coWorkers" id="caseTeamSelect" multiple size="4"></select><small class="muted">Hold Ctrl (Windows) to select more than one authorized co-worker. The primary worker is not repeated here.</small></div><div class="section-title">C. Program-Specific Encoding Form</div>
 <div class="field full"><div class="notice" style="margin:0">The fields below change depending on the selected program. Complete only the form relevant to the case.</div></div>
-<div class="program-fields" id="fields-CNSP" hidden><div class="section-title">CNSP — Child Protection / Abuse & Exploitation</div>
+<div class="program-fields" id="fields-CNSP"><div class="section-title">CNSP — Child Protection / Abuse & Exploitation</div>
 <div class="field"><label>Type of abuse / exploitation</label><select name="cnsp_abuseType"><option value="">Select</option><option>Physical abuse</option><option>Sexual abuse</option><option>Emotional / psychological abuse</option><option>Neglect</option><option>Online sexual abuse / exploitation</option><option>Trafficking / exploitation</option><option>Other / under assessment</option></select></div>
 <div class="field"><label>Case proceeding status</label><select name="cnsp_proceeding"><option value="">Select</option><option>For assessment</option><option>City Prosecutor's Office</option><option>Filed in court</option><option>Ongoing litigation — RTC Family Court</option><option>Plea Bargaining Agreement / decision</option><option>Perpetrator at large</option><option>No legal filing / social case management</option></select></div>
 <div class="field"><label>Child-caring institution referral</label><select name="cnsp_institution"><option value="">Select</option><option>Not referred</option><option>Referral pending</option><option>Referred / admitted</option><option>Discharged / reunified</option></select></div>
@@ -95,9 +95,6 @@
 </section>
 </div></main></div>
 <script>
-// Shared session state is declared before form initialization to avoid cross-script temporal-dead-zone errors.
-let cswdoUser = null, cswdoProfile = null, cswdoProfiles = [];
-let cswdoAllowedPrograms = [];
 const KEY='cswdo_case_demo_v2';let cases=JSON.parse(localStorage.getItem(KEY)||'[]');const $=id=>document.getElementById(id);const today=new Date().toISOString().slice(0,10);document.querySelector('[name="dateReceived"]').value=today;
 function toggleProgramFields(){const selected=$('programInput').value;const permitted=cswdoProfile?.role!=='social_worker'||cswdoAllowedPrograms.includes(selected);document.querySelectorAll('.program-fields').forEach(el=>{const active=permitted&&el.id==='fields-'+selected;el.hidden=!active;el.querySelectorAll('input,select,textarea').forEach(f=>f.disabled=!active)});const customCard=$('customCaseFieldsCard');if(customCard&& !permitted)customCard.style.display='none';}
 const caseTypeOptions={
@@ -115,7 +112,7 @@ function updateCaseTypeOptions(preserveValue=''){
  other.style.display=sel.value==='Other (please specify)'?'block':'none';
  other.required=sel.value==='Other (please specify)';
 }
-$('programInput').addEventListener('change',()=>{toggleProgramFields();renderCustomCaseFields();if(typeof applyManagedDropdownOptions==='function')applyManagedDropdownOptions();});
+$('programInput').addEventListener('change',()=>{toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();if(typeof applyManagedDropdownOptions==='function')applyManagedDropdownOptions();});
 toggleProgramFields();
 $('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
 $('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();});
@@ -172,7 +169,8 @@ const CSWDO_PORTAL = "staff";
 const CSWDO_SUPABASE_URL = 'https://zjbneacjyfhrczgbhwzt.supabase.co';
 const CSWDO_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_QywjU6McljGl7_hPWHz-6Q_I9Qa_3eQ';
 const cswdoClient = window.supabase.createClient(CSWDO_SUPABASE_URL, CSWDO_SUPABASE_PUBLISHABLE_KEY);
-// Shared session state is declared before the first application script.
+let cswdoUser = null, cswdoProfile = null, cswdoProfiles = [];
+let cswdoAllowedPrograms = []; // Loaded from staff_program_assignments for the signed-in worker
 let cswdoLoading = false;
 
 function cswdoMessage(msg, isError=true) {
@@ -295,7 +293,7 @@ async function cswdoLoadProfiles() {
   cswdoProfiles = data || [];
   const teamSelect = document.getElementById('caseTeamSelect');
   if (teamSelect) {
-    teamSelect.innerHTML = cswdoProfiles.filter(p=>p.role==='social_worker'&&p.is_active&&p.id!==cswdoUser?.id)
+    teamSelect.innerHTML = cswdoProfiles.filter(p=>p.role==='social_worker'&&p.is_active)
       .map(p=>`<option value="${p.id}">${esc(p.full_name||'Unnamed staff')}</option>`).join('');
   }
 }
@@ -348,10 +346,13 @@ function cswdoApplyProgramVisibility() {
     });
     if (isWorker && id !== 'programInput' && el.value !== 'ALL' && !allowed.includes(String(el.value).toUpperCase())) el.value = 'ALL';
     if (isWorker && id === 'programInput') {
+      // Social workers with multiple assignments may choose any authorized program.
+      // A single-program worker remains locked to their only authorized program.
       if (!allowed.includes(String(el.value).toUpperCase())) el.value = allowed[0] || '';
-      // Lock the program only when the worker has exactly one authorized program.
-      // Workers assigned to multiple programs (e.g., CICL + CAR) must be able to switch.
       el.disabled = allowed.length <= 1;
+      el.title = allowed.length > 1
+        ? 'Select one of your authorized programs.'
+        : 'Your account is assigned to one program.';
     }
   });
   ['CNSP','VAWC','CICL','CAR'].forEach(code => {
@@ -418,6 +419,7 @@ async function cswdoStartSession(session) {
   await loadCustomFormFields();
   await applyManagedDropdownOptions();
   cswdoSetRoleUI();
+  cswdoApplyProgramVisibility();
   toggleProgramFields();
   await cswdoLoadCases();
   document.getElementById('authGate').style.display = 'none';
