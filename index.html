@@ -43,7 +43,7 @@
 <div class="field"><label>Service plan status</label><select name="vawc_plan"><option value="">Select</option><option>For assessment</option><option>Safety plan prepared</option><option>Service plan ongoing</option><option>Referred to partner services</option><option>Monitoring / follow-up</option><option>Closure review</option></select></div>
 <div class="field full"><label>VAWC services / safety plan update</label><textarea name="vawc_update" placeholder="Record services and next steps without unnecessary sensitive details"></textarea></div></div>
 <div class="program-fields" id="fields-CICL" hidden><div class="section-title">CICL — Children in Conflict with the Law</div>
-<div class="field"><label>Offense / alleged violation category</label><select name="cicl_offense"><option value="">Select</option><option>Property-related</option><option>Person-related</option><option>Drug-related</option><option>Cyber-related</option><option>Other / pending classification</option></select></div>
+<div class="field"><label>Offense / alleged violation category</label><select name="cicl_offense" id="ciclOffenseInput" onchange="toggleCiclOffenseOther()"><option value="">Select</option><option>STATUTORY RAPE</option><option>PHYSICAL INJURIES</option><option>ROBBERY</option><option>THEFT</option><option>STEALING</option><option>SEXUAL HARASSMENT</option><option>CARNAPPING</option><option>Other (please specify)</option></select><input name="cicl_offense_other" id="ciclOffenseOther" class="input" style="margin-top:8px;display:none" placeholder="Specify other offense / alleged violation" aria-label="Specify other offense / alleged violation"></div>
 <div class="field"><label>Stage of case</label><select name="cicl_stage"><option value="">Select</option><option>Initial referral</option><option>Assessment / discernment</option><option>At barangay / police</option><option>Diversion assessment</option><option>Diversion program ongoing</option><option>Referred to prosecutor / court</option><option>Disposition / aftercare</option></select></div>
 <div class="field"><label>Diversion status</label><select name="cicl_diversion"><option value="">Select</option><option>Not applicable / not assessed</option><option>Eligible — assessment pending</option><option>Accepted / ongoing</option><option>Completed</option><option>Unsuccessful / referred onward</option></select></div>
 <div class="field"><label>Intervention / rehabilitation status</label><select name="cicl_intervention"><option value="">Select</option><option>Initial intervention</option><option>Family conferencing</option><option>Community-based intervention</option><option>Residential / institution referral</option><option>Aftercare</option><option>Completed</option></select></div>
@@ -100,9 +100,17 @@ function toggleProgramFields(){const selected=$('programInput').value;const perm
 const caseTypeOptions={
  CNSP:['Physical abuse','Sexual abuse','Emotional / psychological abuse','Neglect','Abandonment','Exploitation','Trafficking','Child labor','Street situation / street-connected child','Online sexual abuse / exploitation','Child in armed conflict','Child with disability needing protection','Other (please specify)','For assessment / not yet classified'],
  VAWC:['Physical violence','Sexual violence','Psychological violence','Economic abuse','Multiple forms of violence','Other (please specify)','For assessment / not yet classified'],
- CICL:['Property-related alleged offense','Person-related alleged offense','Drug-related alleged offense','Cyber-related alleged offense','Other alleged offense (please specify)','Pending verification / classification'],
+ CICL:['STATUTORY RAPE','PHYSICAL INJURIES','ROBBERY','THEFT','STEALING','SEXUAL HARASSMENT','CARNAPPING','Other (please specify)','Pending verification / classification'],
  CAR:['Risk of abuse or neglect','Neglect / inadequate care','Abandonment or risk of abandonment','Exploitation / child labor risk','Street situation / street-connected child','Family conflict or breakdown','School-related vulnerability','Exposure to violence or harmful environment','Trafficking / exploitation risk','Other (please specify)','For assessment / not yet classified']
 };
+function toggleCiclOffenseOther(){
+ const sel=$('ciclOffenseInput'), other=$('ciclOffenseOther');
+ if(!sel||!other)return;
+ const show=sel.value==='Other (please specify)';
+ other.style.display=show?'block':'none';
+ other.required=show;
+ if(!show)other.value='';
+}
 function updateCaseTypeOptions(preserveValue=''){
  const program=$('programInput').value, sel=$('caseTypeInput'), other=$('caseTypeOther');
  const options=caseTypeOptions[program]||[];
@@ -112,7 +120,8 @@ function updateCaseTypeOptions(preserveValue=''){
  other.style.display=sel.value==='Other (please specify)'?'block':'none';
  other.required=sel.value==='Other (please specify)';
 }
-$('programInput').addEventListener('change',()=>{toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();if(typeof applyManagedDropdownOptions==='function')applyManagedDropdownOptions();});
+$('programInput').addEventListener('change',()=>{toggleProgramFields();
+toggleCiclOffenseOther();renderCustomCaseFields();});
 toggleProgramFields();
 $('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
 $('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();});
@@ -346,13 +355,8 @@ function cswdoApplyProgramVisibility() {
     });
     if (isWorker && id !== 'programInput' && el.value !== 'ALL' && !allowed.includes(String(el.value).toUpperCase())) el.value = 'ALL';
     if (isWorker && id === 'programInput') {
-      // Social workers with multiple assignments may choose any authorized program.
-      // A single-program worker remains locked to their only authorized program.
       if (!allowed.includes(String(el.value).toUpperCase())) el.value = allowed[0] || '';
-      el.disabled = allowed.length <= 1;
-      el.title = allowed.length > 1
-        ? 'Select one of your authorized programs.'
-        : 'Your account is assigned to one program.';
+      el.disabled = true;
     }
   });
   ['CNSP','VAWC','CICL','CAR'].forEach(code => {
@@ -419,8 +423,6 @@ async function cswdoStartSession(session) {
   await loadCustomFormFields();
   await applyManagedDropdownOptions();
   cswdoSetRoleUI();
-  cswdoApplyProgramVisibility();
-  toggleProgramFields();
   await cswdoLoadCases();
   document.getElementById('authGate').style.display = 'none';
 }
