@@ -113,7 +113,6 @@ function updateCaseTypeOptions(preserveValue=''){
  other.required=sel.value==='Other (please specify)';
 }
 $('programInput').addEventListener('change',()=>{toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();if(typeof applyManagedDropdownOptions==='function')applyManagedDropdownOptions();});
-toggleProgramFields();
 $('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
 $('ciclOffenseInput').addEventListener('change',()=>{const other=$('ciclOffenseOther');const show=$('ciclOffenseInput').value==='Others please specify';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
 
