@@ -349,7 +349,9 @@ function cswdoApplyProgramVisibility() {
     if (isWorker && id !== 'programInput' && el.value !== 'ALL' && !allowed.includes(String(el.value).toUpperCase())) el.value = 'ALL';
     if (isWorker && id === 'programInput') {
       if (!allowed.includes(String(el.value).toUpperCase())) el.value = allowed[0] || '';
-      el.disabled = true;
+      // Lock the program only when the worker has exactly one authorized program.
+      // Workers assigned to multiple programs (e.g., CICL + CAR) must be able to switch.
+      el.disabled = allowed.length <= 1;
     }
   });
   ['CNSP','VAWC','CICL','CAR'].forEach(code => {
