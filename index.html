@@ -377,6 +377,7 @@ async function cswdoStartSession(session) {
   await cswdoLoadProfiles();
   await loadCustomFormFields();
   await applyCoreFieldSettings();
+  await applyManagedDropdownOptions();
   cswdoSetRoleUI();
   await cswdoLoadCases();
   document.getElementById('authGate').style.display = 'none';

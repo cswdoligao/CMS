@@ -106,6 +106,14 @@ const caseTypeOptions={
  CICL:['Property-related alleged offense','Person-related alleged offense','Drug-related alleged offense','Cyber-related alleged offense','Other alleged offense (please specify)','Pending verification / classification'],
  CAR:['Risk of abuse or neglect','Neglect / inadequate care','Abandonment or risk of abandonment','Exploitation / child labor risk','Street situation / street-connected child','Family conflict or breakdown','School-related vulnerability','Exposure to violence or harmful environment','Trafficking / exploitation risk','Other (please specify)','For assessment / not yet classified']
 };
+async function applyManagedDropdownOptions(){
+ if(!window.cswdoClient)return;const program=$('programInput')?.value||'';
+ const {data,error}=await cswdoClient.from('case_form_dropdown_options').select('*').eq('program',program).eq('is_active',true).order('sort_order');
+ if(error){console.warn('Managed dropdown options unavailable:',error.message);return;}
+ const rows=data||[];const byField=new Map();for(const row of rows){if(!byField.has(row.field_key))byField.set(row.field_key,[]);byField.get(row.field_key).push(row);}
+ for(const [key,opts] of byField){const el=document.querySelector(`#caseForm [name="${CSS.escape(key)}"]`);if(!el||el.tagName!=='SELECT')continue;const previous=el.value;const blank=el.querySelector('option[value=""]')?.outerHTML||'';el.innerHTML=blank+opts.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(previous&&[...el.options].some(o=>o.value===previous))el.value=previous;}
+ const typeRows=byField.get('caseType');if(typeRows){const current=$('caseTypeInput').value;const sel=$('caseTypeInput'),other=$('caseTypeOther');sel.innerHTML='<option value="">Select a concern</option>'+typeRows.map(o=>`<option value="${esc(o.option_value)}">${esc(o.label||o.option_value)}</option>`).join('');if(current&&[...sel.options].some(o=>o.value===current))sel.value=current;other.style.display=sel.value==='Other (please specify)'?'block':'none';other.required=sel.value==='Other (please specify)';}
+}
 function updateCaseTypeOptions(preserveValue=''){
  const program=$('programInput').value, sel=$('caseTypeInput'), other=$('caseTypeOther');
  const options=caseTypeOptions[program]||[];
@@ -118,7 +126,8 @@ function updateCaseTypeOptions(preserveValue=''){
 $('programInput').addEventListener('change',()=>{toggleProgramFields();renderCustomCaseFields();applyCoreFieldSettings();});
 toggleProgramFields();
 $('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
-$('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();applyCoreFieldSettings();});
+$('programInput').addEventListener('change',()=>{updateCaseTypeOptions();
+$('programInput').addEventListener('change',()=>{updateCaseTypeOptions();applyManagedDropdownOptions();});renderCustomCaseFields();applyCoreFieldSettings();});
 updateCaseTypeOptions();
 
 function showPage(name){if(['user-roles','staff-accounts','activity-logs','form-management'].includes(name) && cswdoProfile?.role!=='admin'){alert('Administrator access only.');return;}document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$('page-'+name).classList.add('active');document.querySelectorAll('.nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));const titles={dashboard:'Case Management Dashboard',cases:'Case Records',encode:'Case Intake & Encoding',schedule:'Follow-ups & Hearings',reports:'Quarterly Reports',references:'DSWD Program References','user-roles':'User Roles & Permissions','staff-accounts':'Staff Accounts','activity-logs':'User Activity Logs','form-management':'Form Management'};$('topTitle').textContent=titles[name]||name;$('crumb').textContent=titles[name]||name;if(name==='dashboard')renderDashboard();if(name==='cases')renderCases();if(name==='schedule')renderSchedule();if(name==='reports')renderReports();if(name==='staff-accounts')renderStaffAccounts();if(name==='activity-logs')renderActivityLogs();if(name==='form-management'){loadFormManagement();loadCoreFieldSettings();loadDropdownFieldChoices();}}
@@ -421,6 +430,7 @@ async function cswdoStartSession(session) {
   await cswdoLoadProfiles();
   await loadCustomFormFields();
   await applyCoreFieldSettings();
+  await applyManagedDropdownOptions();
   cswdoSetRoleUI();
   await cswdoLoadCases();
   document.getElementById('authGate').style.display = 'none';
