@@ -43,7 +43,7 @@
 <div class="field"><label>Service plan status</label><select name="vawc_plan"><option value="">Select</option><option>For assessment</option><option>Safety plan prepared</option><option>Service plan ongoing</option><option>Referred to partner services</option><option>Monitoring / follow-up</option><option>Closure review</option></select></div>
 <div class="field full"><label>VAWC services / safety plan update</label><textarea name="vawc_update" placeholder="Record services and next steps without unnecessary sensitive details"></textarea></div></div>
 <div class="program-fields" id="fields-CICL" hidden><div class="section-title">CICL — Children in Conflict with the Law</div>
-<div class="field"><label>Offense / alleged violation category</label><select name="cicl_offense" id="ciclOffenseInput" onchange="toggleCiclOffenseOther()"><option value="">Select</option><option>STATUTORY RAPE</option><option>PHYSICAL INJURIES</option><option>ROBBERY</option><option>THEFT</option><option>STEALING</option><option>SEXUAL HARASSMENT</option><option>CARNAPPING</option><option>Other (please specify)</option></select><input name="cicl_offense_other" id="ciclOffenseOther" class="input" style="margin-top:8px;display:none" placeholder="Specify other offense / alleged violation" aria-label="Specify other offense / alleged violation"></div>
+<div class="field"><label>Offense / alleged violation category</label><select name="cicl_offense" id="ciclOffenseInput"><option value="">Select</option><option>STATUTORY RAPE</option><option>PHYSICAL INJURIES</option><option>ROBBERY</option><option>THEFT</option><option>STEALING</option><option>SEXUAL HARASSMENT</option><option>CARNAPPING</option><option>Others please specify</option></select><input name="cicl_offenseOther" id="ciclOffenseOther" class="input" style="margin-top:8px;display:none" placeholder="Specify other offense / alleged violation" aria-label="Specify other offense / alleged violation"></div>
 <div class="field"><label>Stage of case</label><select name="cicl_stage"><option value="">Select</option><option>Initial referral</option><option>Assessment / discernment</option><option>At barangay / police</option><option>Diversion assessment</option><option>Diversion program ongoing</option><option>Referred to prosecutor / court</option><option>Disposition / aftercare</option></select></div>
 <div class="field"><label>Diversion status</label><select name="cicl_diversion"><option value="">Select</option><option>Not applicable / not assessed</option><option>Eligible — assessment pending</option><option>Accepted / ongoing</option><option>Completed</option><option>Unsuccessful / referred onward</option></select></div>
 <div class="field"><label>Intervention / rehabilitation status</label><select name="cicl_intervention"><option value="">Select</option><option>Initial intervention</option><option>Family conferencing</option><option>Community-based intervention</option><option>Residential / institution referral</option><option>Aftercare</option><option>Completed</option></select></div>
@@ -100,17 +100,9 @@ function toggleProgramFields(){const selected=$('programInput').value;const perm
 const caseTypeOptions={
  CNSP:['Physical abuse','Sexual abuse','Emotional / psychological abuse','Neglect','Abandonment','Exploitation','Trafficking','Child labor','Street situation / street-connected child','Online sexual abuse / exploitation','Child in armed conflict','Child with disability needing protection','Other (please specify)','For assessment / not yet classified'],
  VAWC:['Physical violence','Sexual violence','Psychological violence','Economic abuse','Multiple forms of violence','Other (please specify)','For assessment / not yet classified'],
- CICL:['STATUTORY RAPE','PHYSICAL INJURIES','ROBBERY','THEFT','STEALING','SEXUAL HARASSMENT','CARNAPPING','Other (please specify)','Pending verification / classification'],
+ CICL:['STATUTORY RAPE','PHYSICAL INJURIES','ROBBERY','THEFT','STEALING','SEXUAL HARASSMENT','CARNAPPING','Others please specify'],
  CAR:['Risk of abuse or neglect','Neglect / inadequate care','Abandonment or risk of abandonment','Exploitation / child labor risk','Street situation / street-connected child','Family conflict or breakdown','School-related vulnerability','Exposure to violence or harmful environment','Trafficking / exploitation risk','Other (please specify)','For assessment / not yet classified']
 };
-function toggleCiclOffenseOther(){
- const sel=$('ciclOffenseInput'), other=$('ciclOffenseOther');
- if(!sel||!other)return;
- const show=sel.value==='Other (please specify)';
- other.style.display=show?'block':'none';
- other.required=show;
- if(!show)other.value='';
-}
 function updateCaseTypeOptions(preserveValue=''){
  const program=$('programInput').value, sel=$('caseTypeInput'), other=$('caseTypeOther');
  const options=caseTypeOptions[program]||[];
@@ -120,10 +112,10 @@ function updateCaseTypeOptions(preserveValue=''){
  other.style.display=sel.value==='Other (please specify)'?'block':'none';
  other.required=sel.value==='Other (please specify)';
 }
-$('programInput').addEventListener('change',()=>{toggleProgramFields();
-toggleCiclOffenseOther();renderCustomCaseFields();});
+$('programInput').addEventListener('change',()=>{toggleProgramFields();updateCaseTypeOptions();renderCustomCaseFields();if(typeof applyManagedDropdownOptions==='function')applyManagedDropdownOptions();});
 toggleProgramFields();
-$('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=$('caseTypeInput').value==='Other (please specify)';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
+$('caseTypeInput').addEventListener('change',()=>{const other=$('caseTypeOther');const show=['Other (please specify)','Others please specify'].includes($('caseTypeInput').value);other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
+$('ciclOffenseInput').addEventListener('change',()=>{const other=$('ciclOffenseOther');const show=$('ciclOffenseInput').value==='Others please specify';other.style.display=show?'block':'none';other.required=show;if(!show)other.value='';});
 $('programInput').addEventListener('change',()=>{updateCaseTypeOptions();renderCustomCaseFields();});
 updateCaseTypeOptions();
 
@@ -139,7 +131,7 @@ let editingCaseId=null;
 function editCase(id){const c=cases.find(x=>x.id===id);if(!c)return;editingCaseId=id;showPage('encode');const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();renderCustomCaseFields(c);updateCaseTypeOptions(c.caseType||'');for(const [key,value] of Object.entries(c)){if(key==='caseType')continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});}
 function cancelEdit(){editingCaseId=null;$('caseForm').reset();$('dateReceived').value=today;toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}
 $('caseForm').addEventListener('reset',()=>setTimeout(()=>{if(editingCaseId){editingCaseId=null;$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;}$('dateReceived').value=today;toggleProgramFields()},0));
-$('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target).entries());if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(d.program)){alert('You are not authorized to encode cases under this program.');return;}if(d.caseType==='Other (please specify)'){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType){alert('Please specify the other case type / concern.');return;}}delete d.caseTypeOther;const folder=(d.folderNo||'').trim().toLowerCase();if(cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===folder&&c.id!==editingCaseId)){alert('A record with this Case Folder No. already exists. Please check the number before saving.');return;}let c;if(editingCaseId){const old=cases.find(x=>x.id===editingCaseId);if(!old)return;c={...old,...d,year:Number((d.dateReceived||today).slice(0,4)),updatedAt:new Date().toISOString()};cases=cases.map(x=>x.id===editingCaseId?c:x);}else{let y=(d.dateReceived||today).slice(0,4),n=String(cases.filter(x=>x.program===d.program&&x.year===Number(y)).length+1).padStart(4,'0');c={...d,year:Number(y),id:`${d.program}-${y}-${n}`,createdAt:new Date().toISOString()};cases.push(c);}save();const savedId=c.id;editingCaseId=null;e.target.reset();$('dateReceived').value=today;updateCaseTypeOptions();toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;const wasUpdated=Boolean(c.updatedAt);$('successTitle').textContent=wasUpdated?'Case record updated successfully':'Case encoded successfully';$('successMessage').textContent=`Case ID: ${savedId}. Opening Case Records…`;$('successToast').hidden=false;setTimeout(()=>{showPage('cases');$('caseProgram').value='ALL';renderCases();$('successToast').hidden=true;},1100)});function renderSchedule(){let arr=cases.filter(c=>c.nextFollowup).sort((a,b)=>a.nextFollowup.localeCompare(b.nextFollowup));$('scheduleRows').innerHTML=arr.length?arr.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.nextFollowup)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No follow-ups scheduled. Add a next follow-up date when encoding a case.</td></tr>`}
+$('caseForm').addEventListener('submit',e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target).entries());if(cswdoProfile?.role==='social_worker'&&!cswdoAllowedPrograms.includes(d.program)){alert('You are not authorized to encode cases under this program.');return;}if(['Other (please specify)','Others please specify'].includes(d.caseType)){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType){alert('Please specify the other case type / concern.');return;}}delete d.caseTypeOther;const folder=(d.folderNo||'').trim().toLowerCase();if(cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===folder&&c.id!==editingCaseId)){alert('A record with this Case Folder No. already exists. Please check the number before saving.');return;}let c;if(editingCaseId){const old=cases.find(x=>x.id===editingCaseId);if(!old)return;c={...old,...d,year:Number((d.dateReceived||today).slice(0,4)),updatedAt:new Date().toISOString()};cases=cases.map(x=>x.id===editingCaseId?c:x);}else{let y=(d.dateReceived||today).slice(0,4),n=String(cases.filter(x=>x.program===d.program&&x.year===Number(y)).length+1).padStart(4,'0');c={...d,year:Number(y),id:`${d.program}-${y}-${n}`,createdAt:new Date().toISOString()};cases.push(c);}save();const savedId=c.id;editingCaseId=null;e.target.reset();$('dateReceived').value=today;updateCaseTypeOptions();toggleProgramFields();$('saveCaseBtn').textContent='Save Case Record';$('cancelEditBtn').hidden=true;const wasUpdated=Boolean(c.updatedAt);$('successTitle').textContent=wasUpdated?'Case record updated successfully':'Case encoded successfully';$('successMessage').textContent=`Case ID: ${savedId}. Opening Case Records…`;$('successToast').hidden=false;setTimeout(()=>{showPage('cases');$('caseProgram').value='ALL';renderCases();$('successToast').hidden=true;},1100)});function renderSchedule(){let arr=cases.filter(c=>c.nextFollowup).sort((a,b)=>a.nextFollowup.localeCompare(b.nextFollowup));$('scheduleRows').innerHTML=arr.length?arr.map(c=>`<tr><td class="caseid">${esc(c.id)}</td><td>${esc(c.program)}</td><td>${esc(c.caseType)}</td><td>${esc(c.nextFollowup)}</td><td>${esc(c.worker||'—')}</td><td>${badge(c.status)}</td></tr>`).join(''):`<tr><td colspan="6" class="empty">No follow-ups scheduled. Add a next follow-up date when encoding a case.</td></tr>`}
 function safeReportText(v){return String(v??'').replace(/[&<>\"']/g, ch => ch==='&'?'&amp;':ch==='<'?'&lt;':ch==='>'?'&gt;':ch==='\"'?'&quot;':'&#39;');}
 function renderReports(){
 let y=$('reportYear').value,p=$('reportProgram').value,q=$('reportQuarter').value;
@@ -355,8 +347,13 @@ function cswdoApplyProgramVisibility() {
     });
     if (isWorker && id !== 'programInput' && el.value !== 'ALL' && !allowed.includes(String(el.value).toUpperCase())) el.value = 'ALL';
     if (isWorker && id === 'programInput') {
+      // Social workers with multiple assignments may choose any authorized program.
+      // A single-program worker remains locked to their only authorized program.
       if (!allowed.includes(String(el.value).toUpperCase())) el.value = allowed[0] || '';
-      el.disabled = true;
+      el.disabled = allowed.length <= 1;
+      el.title = allowed.length > 1
+        ? 'Select one of your authorized programs.'
+        : 'Your account is assigned to one program.';
     }
   });
   ['CNSP','VAWC','CICL','CAR'].forEach(code => {
@@ -423,6 +420,8 @@ async function cswdoStartSession(session) {
   await loadCustomFormFields();
   await applyManagedDropdownOptions();
   cswdoSetRoleUI();
+  cswdoApplyProgramVisibility();
+  toggleProgramFields();
   await cswdoLoadCases();
   document.getElementById('authGate').style.display = 'none';
 }
@@ -513,7 +512,10 @@ async function cswdoSaveCase(event){
   if (!cswdoUser || !cswdoProfile) return alert('Please sign in first.');
   if (cswdoProfile.role==='cswd_officer') return alert('CSWD Officer accounts have read-only case access.');
   const form=$('caseForm'), d=Object.fromEntries(new FormData(form).entries());
-  if(d.caseType==='Other (please specify)'){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType)return alert('Please specify the other concern.');}
+  if(['Other (please specify)','Others please specify'].includes(d.caseType)){d.caseType=(d.caseTypeOther||'').trim();if(!d.caseType)return alert('Please specify the other concern.');}
+  if(d.program==='CICL'&&d.cicl_offense==='Others please specify'&&!(d.cicl_offenseOther||'').trim()){
+    return alert('Please specify the other offense / alleged violation.');
+  }
   delete d.caseTypeOther;
   const duplicate=cases.some(c=>String(c.folderNo||'').trim().toLowerCase()===String(d.folderNo||'').trim().toLowerCase()&&c.id!==editingCaseId);
   if(duplicate)return alert('A record with this Case Folder No. already exists in the records visible to you. The database will also enforce uniqueness.');
@@ -591,6 +593,7 @@ function editCase(caseCode){
   const form=$('caseForm');form.elements.namedItem('program').value=c.program;toggleProgramFields();updateCaseTypeOptions(c.caseType||'');
   for(const [key,value] of Object.entries(c)){if(['caseType','id','dbId','year','createdAt','updatedAt'].includes(key))continue;const field=form.elements.namedItem(key);if(field&&field.type!=='button'&&field.type!=='submit')field.value=value??'';}
   if(cswdoProfile.role==='social_worker')document.querySelector('[name="worker"]').value=cswdoProfile.full_name||'';
+   const offenseOther=$('ciclOffenseOther');if(offenseOther){const isOther=$('ciclOffenseInput').value==='Others please specify';offenseOther.style.display=isOther?'block':'none';offenseOther.required=isOther;}
   const teamSelect=document.getElementById('caseTeamSelect');
   if(teamSelect){[...teamSelect.options].forEach(o=>o.selected=(c.coWorkerIds||[]).includes(o.value));}
   toggleProgramFields();$('saveCaseBtn').textContent='Update Case Record';$('cancelEditBtn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});
